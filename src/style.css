@@ -133,6 +133,14 @@ body {
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.5px;
   text-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.brand:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
 }
 
 .nav-links {

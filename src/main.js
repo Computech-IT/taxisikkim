@@ -27,7 +27,7 @@ document.querySelector('#app').innerHTML = `
     
     <!-- Navbar -->
     <nav class="navbar">
-      <div class="brand">Sikkim Taxi Service</div>
+      <a href="#hero" class="brand">Sikkim Taxi Service</a>
       <ul class="nav-links">
         <li><a href="#hero">Book</a></li>
         <li><a href="#services">Services</a></li>
