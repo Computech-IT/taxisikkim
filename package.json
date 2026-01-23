@@ -1,0 +1,28 @@
+{
+  "name": "taxi-sikkim",
+  "version": "1.0.0",
+  "description": "Taxi Rental Service for Sikkim",
+  "main": "server.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "taxi",
+    "sikkim",
+    "rental",
+    "booking"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.13"
+  },
+  "devDependencies": {
+    "vite": "^5.2.11"
+  }
+}
