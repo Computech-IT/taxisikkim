@@ -241,6 +241,14 @@ window.selectVehicle = (id, shouldOpen = false) => {
 // Modal Functions
 window.closeModal = () => {
   modal.classList.remove('active');
+
+  // Reset the form to initial state
+  state.step = 1;
+  stepVehicle.classList.add('hidden');
+  stepLocation.classList.remove('hidden');
+  actionBtn.innerText = "Find Ride";
+  actionBtn.style.background = 'var(--gradient-ocean)';
+  actionBtn.disabled = false;
 }
 
 window.finalizeBooking = async (method) => {
