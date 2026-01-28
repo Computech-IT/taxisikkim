@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'dist'))); // Serve Vite build
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public
 
 // =====================
 // SMTP Transporter
@@ -22,20 +22,16 @@ app.use(express.static(path.join(__dirname, 'dist'))); // Serve Vite build
 const transporter = nodemailer.createTransport({
     host: "smtp.hostinger.com",
     port: 465,
-    secure: true, // SSL
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     }
 });
 
-// Verify SMTP connection
 transporter.verify((err, success) => {
-    if (err) {
-        console.error("❌ SMTP ERROR:", err);
-    } else {
-        console.log("✅ SMTP Server is ready to take messages");
-    }
+    if (err) console.error("❌ SMTP ERROR:", err);
+    else console.log("✅ SMTP Server ready");
 });
 
 // =====================
@@ -43,12 +39,8 @@ transporter.verify((err, success) => {
 // =====================
 app.post('/api/book', async (req, res) => {
     const { name, email, phone, pickup, drop, date, vehicle } = req.body;
-
     if (!name || !email || !phone || !pickup || !drop || !date || !vehicle) {
-        return res.status(400).json({
-            success: false,
-            message: 'All fields are required.'
-        });
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
     try {
@@ -68,8 +60,7 @@ Phone: ${phone}
 Vehicle: ${vehicle}
 Pickup: ${pickup}
 Drop: ${drop}
-Date: ${date}
-            `
+Date: ${date}`
         });
 
         res.json({ success: true, message: 'Booking request sent successfully!' });
@@ -85,12 +76,8 @@ Date: ${date}
 // =====================
 app.post('/api/enquiry', async (req, res) => {
     const { name, email, phone, subject, message } = req.body;
-
     if (!name || !email || !phone || !subject || !message) {
-        return res.status(400).json({
-            success: false,
-            message: 'All fields are required.'
-        });
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
     try {
@@ -115,8 +102,7 @@ app.post('/api/enquiry', async (req, res) => {
 <p style="font-size:12px;color:#666;">
 Reply directly to this email to respond to the customer.
 </p>
-</div>
-            `
+</div>`
         });
 
         res.json({ success: true, message: 'Enquiry sent successfully!' });
@@ -128,10 +114,10 @@ Reply directly to this email to respond to the customer.
 });
 
 // =====================
-// SPA Fallback
+// SPA Fallback (must come AFTER API routes)
 // =====================
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // =====================
