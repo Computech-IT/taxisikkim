@@ -32,8 +32,9 @@ document.querySelector('#app').innerHTML = `
         <li><a href="#hero">Book</a></li>
         <li><a href="#services">Services</a></li>
         <li><a href="#testimonials">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
-      <a href="tel:+919876543210" style="padding: 10px 20px; background: #000; color: white; border-radius: 30px; text-decoration: none; font-size: 0.9rem;">Call Us</a>
+      <a href="tel:+919339727733" style="padding: 10px 20px; background: #000; color: white; border-radius: 30px; text-decoration: none; font-size: 0.9rem;">Call Us</a>
     </nav>
 
     <!-- Hero Section with Booking Widget -->
@@ -53,10 +54,12 @@ document.querySelector('#app').innerHTML = `
             <div class="location-inputs">
               <div class="input-row">
                 <div class="input-icon"></div>
+                From
                 <input type="text" id="pickup" class="app-input" placeholder="Pickup location" value="Bagdogra Airport">
               </div>
               <div class="input-row">
                 <div class="input-icon square"></div>
+                To
                 <input type="text" id="drop" class="app-input" placeholder="Drop location" value="Gangtok, MG Marg">
               </div>
             </div>
@@ -131,6 +134,127 @@ document.querySelector('#app').innerHTML = `
        </div>
     </section>
 
+    <!-- Enquiry Form Section -->
+    <section id="contact" class="section" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; position: relative; overflow: hidden;">
+       <!-- Animated Background Elements -->
+       <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; pointer-events: none;">
+         <div style="position: absolute; top: 20%; left: 10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%); border-radius: 50%; filter: blur(60px);"></div>
+         <div style="position: absolute; bottom: 10%; right: 15%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(14, 165, 233, 0.3) 0%, transparent 70%); border-radius: 50%; filter: blur(80px);"></div>
+       </div>
+
+       <div style="position: relative; z-index: 1;">
+         <h2 class="section-title fade-in-up" style="color: white; margin-bottom: 15px;">Have Questions?</h2>
+         <p style="text-align: center; max-width: 600px; margin: 0 auto 50px; opacity: 0.8; font-size: 1.1rem;">Send us your enquiry and our team will get back to you within 24 hours</p>
+         
+         <div class="enquiry-form-container fade-in-up delay-100">
+           <form id="enquiry-form" class="enquiry-form">
+             <div class="form-row">
+               <div class="form-group">
+                 <label for="enquiry-name" class="form-label">
+                   <i class="ri-user-line"></i> Full Name
+                 </label>
+                 <input 
+                   type="text" 
+                   id="enquiry-name" 
+                   class="form-input" 
+                   placeholder="Enter your name" 
+                   required
+                 >
+               </div>
+               
+               <div class="form-group">
+                 <label for="enquiry-email" class="form-label">
+                   <i class="ri-mail-line"></i> Email Address
+                 </label>
+                 <input 
+                   type="email" 
+                   id="enquiry-email" 
+                   class="form-input" 
+                   placeholder="your@email.com" 
+                   required
+                 >
+               </div>
+             </div>
+
+             <div class="form-row">
+               <div class="form-group">
+                 <label for="enquiry-phone" class="form-label">
+                   <i class="ri-phone-line"></i> Phone Number
+                 </label>
+                 <input 
+                   type="tel" 
+                   id="enquiry-phone" 
+                   class="form-input" 
+                   placeholder="+91 XXXXX XXXXX" 
+                   required
+                 >
+               </div>
+
+               <div class="form-group">
+                 <label for="enquiry-subject" class="form-label">
+                   <i class="ri-sparkling-line"></i> Subject
+                 </label>
+                 <select id="enquiry-subject" class="form-input" required>
+                   <option value="">Select a topic</option>
+                   <option value="Booking Inquiry">Booking Inquiry</option>
+                   <option value="Package Details">Package Details</option>
+                   <option value="Pricing Information">Pricing Information</option>
+                   <option value="Corporate Services">Corporate Services</option>
+                   <option value="General Query">General Query</option>
+                   <option value="Other">Other</option>
+                 </select>
+               </div>
+             </div>
+
+             <div class="form-group">
+               <label for="enquiry-message" class="form-label">
+                 <i class="ri-message-3-line"></i> Your Message
+               </label>
+               <textarea 
+                 id="enquiry-message" 
+                 class="form-input form-textarea" 
+                 placeholder="Tell us about your travel plans or any questions you have..." 
+                 rows="5"
+                 required
+               ></textarea>
+             </div>
+
+             <div style="text-align: center; margin-top: 30px;">
+               <button type="submit" id="enquiry-submit-btn" class="btn-submit-enquiry">
+                 <i class="ri-send-plane-fill"></i> Send Enquiry
+               </button>
+             </div>
+
+             <div id="enquiry-status" class="enquiry-status"></div>
+           </form>
+         </div>
+
+         <!-- Quick Contact Info -->
+         <div class="quick-contact-info fade-in-up delay-200">
+           <div class="contact-info-item">
+             <i class="ri-phone-fill"></i>
+             <div>
+               <div class="contact-label">Call Us</div>
+               <a href="tel:+919339727733" class="contact-value">+91 93397 27733</a>
+             </div>
+           </div>
+           <div class="contact-info-item">
+             <i class="ri-whatsapp-fill"></i>
+             <div>
+               <div class="contact-label">WhatsApp</div>
+               <a href="https://wa.me/919339727733" target="_blank" class="contact-value">Chat with Us</a>
+             </div>
+           </div>
+           <div class="contact-info-item">
+             <i class="ri-time-line"></i>
+             <div>
+               <div class="contact-label">Available</div>
+               <div class="contact-value">24/7 Support</div>
+             </div>
+           </div>
+         </div>
+       </div>
+    </section>
 
     <footer class="site-footer">
        <div style="font-size: 1.5rem; font-weight: 800; margin-bottom: 20px;">Sikkim Taxi Service</div>
@@ -148,9 +272,18 @@ document.querySelector('#app').innerHTML = `
            <!-- Populated via JS -->
         </div>
 
+        <div style="margin: 15px 0;">
+            <label style="display:block; text-align:left; font-size:0.9rem; color:#64748b; margin-bottom:5px;">Your Details</label>
+            <input type="text" id="book-name" class="app-input" placeholder="Full Name" style="width:100%; margin-bottom:10px; border:1px solid #cbd5e1;">
+            <input type="tel" id="book-phone" class="app-input" placeholder="Phone Number" style="width:100%; margin-bottom:10px; border:1px solid #cbd5e1;">
+            <input type="email" id="book-email" class="app-input" placeholder="Email Address" style="width:100%; border:1px solid #cbd5e1;">
+        </div>
+
+        <div id="booking-status" class="enquiry-status" style="margin-bottom: 15px;"></div>
+
         <div class="modal-actions">
            <button class="btn-whatsapp" onclick="finalizeBooking('whatsapp')">
-              <span>Chat on WhatsApp</span>
+              <span>Book on WhatsApp</span>
            </button>
            <button class="btn-email" onclick="finalizeBooking('email')">
               Book via Email
@@ -181,6 +314,20 @@ dateInput.valueAsDate = new Date();
 // Open Modal Helper
 function openBookingModal() {
   const veh = vehicles.find(v => v.id === state.selectedVehicle);
+
+  // Reset inputs when opening
+  const nameInput = document.getElementById('book-name');
+  const phoneInput = document.getElementById('book-phone');
+  const emailInput = document.getElementById('book-email');
+  const statusEl = document.getElementById('booking-status');
+
+  if (nameInput) nameInput.value = '';
+  if (phoneInput) phoneInput.value = '';
+  if (emailInput) emailInput.value = '';
+  if (statusEl) {
+    statusEl.style.display = 'none';
+    statusEl.className = 'enquiry-status';
+  }
 
   // Populate Modal
   modalSummary.innerHTML = `
@@ -252,8 +399,34 @@ window.closeModal = () => {
 }
 
 window.finalizeBooking = async (method) => {
+  const name = document.getElementById('book-name').value.trim();
+  const phone = document.getElementById('book-phone').value.trim();
+  const email = document.getElementById('book-email').value.trim();
+  const statusEl = document.getElementById('booking-status');
+
+  // Helper to show status inside modal
+  const showStatus = (msg, type) => {
+    statusEl.textContent = msg;
+    statusEl.className = `enquiry-status ${type}`; // Reusing existing css class
+    statusEl.style.display = 'block';
+  };
+
+  if (!name || !phone) {
+    showStatus("Please enter at least Name and Phone Number.", 'error');
+    return;
+  }
+
+  // If Email method, Email is required
+  if (method === 'email' && !email) {
+    showStatus("Please enter your Email Address for email booking.", 'error');
+    return;
+  }
+
   const veh = vehicles.find(v => v.id === state.selectedVehicle);
   const details = {
+    name: name,
+    email: email, // Can be empty if whatsapp
+    phone: phone,
     vehicle: veh.name,
     pickup: state.pickup,
     drop: state.drop,
@@ -262,29 +435,31 @@ window.finalizeBooking = async (method) => {
   };
 
   if (method === 'whatsapp') {
-    const message = `Hi, I want to book a ride.%0A%0A🚖 *Vehicle*: ${details.vehicle}%0A📍 *From*: ${details.pickup}%0A🏁 *To*: ${details.drop}%0A📅 *Date*: ${details.date}%0A💰 *Price*: Approx ₹${details.price}`;
-    window.open(`https://wa.me/919876543210?text=${message}`, '_blank');
+    const message = `Hi, I want to book a ride.%0A%0A🚖 *Vehicle*: ${details.vehicle}%0A👤 *Name*: ${details.name}%0A📱 *Phone*: ${details.phone}%0A📧 *Email*: ${details.email || 'N/A'}%0A📍 *From*: ${details.pickup}%0A🏁 *To*: ${details.drop}%0A📅 *Date*: ${details.date}%0A💰 *Price*: Approx ₹${details.price}`;
+    window.open(`https://wa.me/919339727733?text=${message}`, '_blank');
     closeModal();
   } else if (method === 'email') {
-    // Basic Email Logic - In a real app, prompts for User Email
-    const userEmail = prompt("Please confirm your email address:", "user@example.com");
-    if (userEmail) {
-      try {
-        const response = await fetch('/api/book', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...details, email: userEmail })
-        });
-        if (response.ok) {
-          alert(`Booking Request Sent! Check ${userEmail} for details.`);
-        } else {
-          alert('Connection error. Please try WhatsApp.');
-        }
-      } catch (e) {
-        alert('Error sending request. Please try WhatsApp.');
+    try {
+      showStatus('Sending booking request...', 'pending');
+
+      const response = await fetch('/api/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(details)
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        showStatus('✓ Booking Request Sent! Check your email.', 'success');
+        setTimeout(() => closeModal(), 2000); // Close after 2s
+      } else {
+        showStatus(`Failed: ${data.message || 'Server error'}`, 'error');
       }
+    } catch (e) {
+      console.error(e);
+      showStatus('Connection error. Please try WhatsApp.', 'error');
     }
-    closeModal();
   }
 }
 
@@ -325,3 +500,63 @@ backBtn.addEventListener('click', () => {
   actionBtn.innerText = "Find Ride";
   actionBtn.style.background = '#000';
 });
+
+// Enquiry Form Handler
+const enquiryForm = document.getElementById('enquiry-form');
+const enquiryStatus = document.getElementById('enquiry-status');
+const enquirySubmitBtn = document.getElementById('enquiry-submit-btn');
+
+enquiryForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('enquiry-name').value.trim();
+  const email = document.getElementById('enquiry-email').value.trim();
+  const phone = document.getElementById('enquiry-phone').value.trim();
+  const subject = document.getElementById('enquiry-subject').value;
+  const message = document.getElementById('enquiry-message').value.trim();
+
+  // Validate form
+  if (!name || !email || !phone || !subject || !message) {
+    showEnquiryStatus('Please fill in all fields', 'error');
+    return;
+  }
+
+  // Show loading state
+  enquirySubmitBtn.disabled = true;
+  enquirySubmitBtn.innerHTML = '<i class="ri-loader-4-line"></i> Sending...';
+
+  try {
+    const response = await fetch('/api/enquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, subject, message })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      showEnquiryStatus('✓ Thank you! Your enquiry has been sent successfully. We\'ll get back to you soon.', 'success');
+      enquiryForm.reset();
+    } else {
+      showEnquiryStatus('Failed to send enquiry. Please try calling or WhatsApp instead.', 'error');
+    }
+  } catch (error) {
+    console.error('Enquiry submission error:', error);
+    showEnquiryStatus('Connection error. Please try calling or WhatsApp instead.', 'error');
+  } finally {
+    // Reset button
+    enquirySubmitBtn.disabled = false;
+    enquirySubmitBtn.innerHTML = '<i class="ri-send-plane-fill"></i> Send Enquiry';
+  }
+});
+
+function showEnquiryStatus(message, type) {
+  enquiryStatus.textContent = message;
+  enquiryStatus.className = `enquiry-status ${type}`;
+  enquiryStatus.style.display = 'block';
+
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    enquiryStatus.style.display = 'none';
+  }, 5000);
+}
