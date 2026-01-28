@@ -30,8 +30,13 @@ const transporter = nodemailer.createTransport({
 });
 
 transporter.verify((err, success) => {
-    if (err) console.error("❌ SMTP ERROR:", err);
-    else console.log("✅ SMTP Server ready");
+    if (err) {
+        console.error("❌ SMTP ERROR:", err.message);
+        console.log("Config check: EMAIL_USER is", process.env.EMAIL_USER ? "Present" : "MISSING");
+        console.log("Config check: EMAIL_PASS is", process.env.EMAIL_PASS ? "Present" : "MISSING");
+    } else {
+        console.log("✅ SMTP Server ready (Live at", process.env.RECEIVER_EMAIL, ")");
+    }
 });
 
 // =====================
@@ -66,8 +71,12 @@ Date: ${date}`
         res.json({ success: true, message: 'Booking request sent successfully!' });
 
     } catch (err) {
-        console.error('Booking Email Error:', err);
-        res.status(500).json({ success: false, message: 'Failed to send booking request.' });
+        console.error('SERVER_ERROR [Booking]:', err);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to send booking request.',
+            debug: err.message
+        });
     }
 });
 
@@ -108,8 +117,12 @@ Reply directly to this email to respond to the customer.
         res.json({ success: true, message: 'Enquiry sent successfully!' });
 
     } catch (err) {
-        console.error('Enquiry Email Error:', err);
-        res.status(500).json({ success: false, message: 'Failed to send enquiry.' });
+        console.error('SERVER_ERROR [Enquiry]:', err);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to send enquiry.',
+            debug: err.message
+        });
     }
 });
 
