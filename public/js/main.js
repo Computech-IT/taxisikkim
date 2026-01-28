@@ -231,18 +231,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = '/';
                     }, 3000);
                 } else {
-                    const errorText = await res.text();
-                    throw new Error(errorText || 'Failed to book');
+                    let errorMsg = 'Failed to book';
+                    try {
+                        const errorData = await res.json();
+                        errorMsg = errorData.debug || errorData.message || errorMsg;
+                    } catch (e) {
+                        const text = await res.text();
+                        errorMsg = text || errorMsg;
+                    }
+                    throw new Error(errorMsg);
                 }
             } catch (err) {
+                console.error('FRONTEND_ERROR:', err);
                 const submitBtn = e.target.querySelector('button[type="submit"]');
                 if (submitBtn) submitBtn.classList.remove('btn-loading');
 
                 if (inlineNotify) {
-                    inlineNotify.textContent = 'Booking failed. Please try again.';
+                    inlineNotify.textContent = `Error: ${err.message}`;
                     inlineNotify.className = 'inline-notification error';
                 }
-                showToast('Booking failed. Please try again.', 'error');
+                showToast(err.message, 'error');
             }
         });
     }
@@ -315,17 +323,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (enqInlineNotify) enqInlineNotify.style.display = 'none';
                     }, 5000);
                 } else {
-                    throw new Error('Failed to send enquiry');
+                    let errorMsg = 'Failed to send enquiry';
+                    try {
+                        const errorData = await res.json();
+                        errorMsg = errorData.debug || errorData.message || errorMsg;
+                    } catch (e) {
+                        const text = await res.text();
+                        errorMsg = text || errorMsg;
+                    }
+                    throw new Error(errorMsg);
                 }
             } catch (err) {
+                console.error('FRONTEND_ERROR:', err);
                 const submitBtn = e.target.querySelector('button[type="submit"]');
                 if (submitBtn) submitBtn.classList.remove('btn-loading');
 
                 if (enqInlineNotify) {
-                    enqInlineNotify.textContent = 'Enquiry failed. Please try again.';
+                    enqInlineNotify.textContent = `Error: ${err.message}`;
                     enqInlineNotify.className = 'inline-notification error';
                 }
-                showToast('Enquiry failed. Please try again.', 'error');
+                showToast(err.message, 'error');
             }
         });
     }
