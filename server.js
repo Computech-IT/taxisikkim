@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
@@ -12,10 +13,11 @@ const PORT = process.env.PORT || 3000;
 // =====================
 app.use(cors());
 app.use(express.json());
-app.use(express.static('dist')); // Vite build output
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'dist'))); // Serve Vite build
 
 // =====================
-// SMTP Transporter (Hostinger)
+// SMTP Transporter
 // =====================
 const transporter = nodemailer.createTransport({
     host: "smtp.hostinger.com",
@@ -27,12 +29,12 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Verify SMTP once at startup
-transporter.verify((error, success) => {
-    if (error) {
-        console.error("❌ SMTP ERROR:", error);
+// Verify SMTP connection
+transporter.verify((err, success) => {
+    if (err) {
+        console.error("❌ SMTP ERROR:", err);
     } else {
-        console.log("✅ Hostinger SMTP ready");
+        console.log("✅ SMTP Server is ready to take messages");
     }
 });
 
@@ -40,12 +42,9 @@ transporter.verify((error, success) => {
 // BOOKING API
 // =====================
 app.post('/api/book', async (req, res) => {
-    console.log('--- BOOKING REQUEST RECEIVED ---');
-    console.log('Body:', req.body);
     const { name, email, phone, pickup, drop, date, vehicle } = req.body;
 
     if (!name || !email || !phone || !pickup || !drop || !date || !vehicle) {
-        console.log('❌ Validation Failed. Missing fields.');
         return res.status(400).json({
             success: false,
             message: 'All fields are required.'
@@ -53,8 +52,7 @@ app.post('/api/book', async (req, res) => {
     }
 
     try {
-        const recipient = process.env.RECIEVER_EMAIL || process.env.RECEIVER_EMAIL || process.env.EMAIL_USER;
-        console.log(`📧 Sending Booking Request to: ${recipient}`);
+        const recipient = process.env.RECEIVER_EMAIL || process.env.EMAIL_USER;
 
         await transporter.sendMail({
             from: `"Sikkim Taxi Service" <${process.env.EMAIL_USER}>`,
@@ -74,17 +72,11 @@ Date: ${date}
             `
         });
 
-        res.json({
-            success: true,
-            message: 'Booking request sent successfully!'
-        });
+        res.json({ success: true, message: 'Booking request sent successfully!' });
 
-    } catch (error) {
-        console.error('Booking Email Error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to send booking request.'
-        });
+    } catch (err) {
+        console.error('Booking Email Error:', err);
+        res.status(500).json({ success: false, message: 'Failed to send booking request.' });
     }
 });
 
@@ -102,8 +94,7 @@ app.post('/api/enquiry', async (req, res) => {
     }
 
     try {
-        const recipient = process.env.RECIEVER_EMAIL || process.env.RECEIVER_EMAIL || process.env.EMAIL_USER;
-        console.log(`📧 Sending Enquiry to: ${recipient}`);
+        const recipient = process.env.RECEIVER_EMAIL || process.env.EMAIL_USER;
 
         await transporter.sendMail({
             from: `"Sikkim Taxi Service" <${process.env.EMAIL_USER}>`,
@@ -111,34 +102,28 @@ app.post('/api/enquiry', async (req, res) => {
             replyTo: email,
             subject: `📩 New Enquiry – ${subject}`,
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
-                    <h2 style="color:#0f172a;">New Customer Enquiry</h2>
-                    <hr />
-                    <p><strong>Name:</strong> ${name}</p>
-                    <p><strong>Email:</strong> ${email}</p>
-                    <p><strong>Phone:</strong> ${phone}</p>
-                    <p><strong>Subject:</strong> ${subject}</p>
-                    <p><strong>Message:</strong></p>
-                    <p>${message}</p>
-                    <hr />
-                    <p style="font-size:12px;color:#666;">
-                        Reply directly to this email to respond to the customer.
-                    </p>
-                </div>
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
+<h2 style="color:#0f172a;">New Customer Enquiry</h2>
+<hr />
+<p><strong>Name:</strong> ${name}</p>
+<p><strong>Email:</strong> ${email}</p>
+<p><strong>Phone:</strong> ${phone}</p>
+<p><strong>Subject:</strong> ${subject}</p>
+<p><strong>Message:</strong></p>
+<p>${message}</p>
+<hr />
+<p style="font-size:12px;color:#666;">
+Reply directly to this email to respond to the customer.
+</p>
+</div>
             `
         });
 
-        res.json({
-            success: true,
-            message: 'Enquiry sent successfully!'
-        });
+        res.json({ success: true, message: 'Enquiry sent successfully!' });
 
-    } catch (error) {
-        console.error('Enquiry Email Error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to send enquiry.'
-        });
+    } catch (err) {
+        console.error('Enquiry Email Error:', err);
+        res.status(500).json({ success: false, message: 'Failed to send enquiry.' });
     }
 });
 
@@ -153,5 +138,5 @@ app.get('*', (req, res) => {
 // Start Server
 // =====================
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });
