@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/api/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ username, password })
             });
             const data = await res.json();
@@ -64,25 +65,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadVehicles() {
         vehicleTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading fleet...</td></tr>';
-        const res = await fetch('/api/admin/vehicles');
-        const vehicles = await res.json();
+        try {
+            const res = await fetch('/api/admin/vehicles', {
+                credentials: 'include' // Important for sessions
+            });
 
-        vehicleTableBody.innerHTML = '';
-        vehicles.forEach(veh => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="font-size: 1.5rem;">${veh.icon}</td>
-                <td style="font-weight: 600;">${veh.name}</td>
-                <td>${veh.seats} Seater</td>
-                <td style="color: var(--color-electric); font-weight: 700;">₹${veh.rate}</td>
-                <td><span class="status-badge ${veh.active ? 'status-active' : 'status-inactive'}">${veh.active ? 'Active' : 'Hidden'}</span></td>
-                <td>
-                    <button class="btn btn-primary" onclick="editVehicle(${JSON.stringify(veh).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 0.8rem; margin-right: 5px;">Edit</button>
-                    <button class="btn btn-danger" onclick="deleteVehicle(${veh.id})" style="padding: 5px 10px; font-size: 0.8rem;">Delete</button>
-                </td>
-            `;
-            vehicleTableBody.appendChild(tr);
-        });
+            if (!res.ok) {
+                if (res.status === 401) {
+                    // Session expired, redirect to login
+                    showLogin();
+                    return;
+                }
+                throw new Error('Failed to load vehicles');
+            }
+
+            const vehicles = await res.json();
+
+            if (!Array.isArray(vehicles)) {
+                throw new Error('Invalid response format');
+            }
+
+            vehicleTableBody.innerHTML = '';
+
+            if (vehicles.length === 0) {
+                vehicleTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No vehicles found. Add your first vehicle!</td></tr>';
+                return;
+            }
+
+            vehicles.forEach(veh => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-size: 1.5rem;">${veh.icon}</td>
+                    <td style="font-weight: 600;">${veh.name}</td>
+                    <td>${veh.seats} Seater</td>
+                    <td style="color: var(--color-electric); font-weight: 700;">₹${veh.rate}</td>
+                    <td><span class="status-badge ${veh.active ? 'status-active' : 'status-inactive'}">${veh.active ? 'Active' : 'Hidden'}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="editVehicle(${JSON.stringify(veh).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 0.8rem; margin-right: 5px;">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteVehicle(${veh.id})" style="padding: 5px 10px; font-size: 0.8rem;">Delete</button>
+                    </td>
+                `;
+                vehicleTableBody.appendChild(tr);
+            });
+        } catch (err) {
+            console.error('Error loading vehicles:', err);
+            vehicleTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: #ef4444;">Error loading vehicles. Please refresh the page.</td></tr>';
+        }
     }
 
     // Modal Control
