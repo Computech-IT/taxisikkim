@@ -4,7 +4,6 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
 const bcrypt = require('bcrypt');
 const dbMySQL = require('./db');
 require('dotenv').config();
@@ -15,34 +14,31 @@ const PORT = process.env.PORT || 3000;
 // =====================
 // Middleware
 // =====================
-// CORS must allow credentials
+// CORS - simplified for production
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production'
-        ? ['https://taxisikkim.com', 'https://www.taxisikkim.com']
-        : 'http://localhost:3000',
+    origin: true, // Accept all origins for now
     credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Simple session configuration
 app.use(session({
-    store: new FileStore({
-        path: './sessions',
-        ttl: 86400, // 24 hours in seconds
-        retries: 0
-    }),
-    secret: process.env.SESSION_SECRET || 'taxi-sikkim-secret-key',
-    resave: false,
+    secret: process.env.SESSION_SECRET || 'taxi-sikkim-secret-key-2026',
+    resave: true, // Changed to true for better persistence
     saveUninitialized: false,
-    name: 'taxisikkim.sid',
+    name: 'connect.sid',
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // true for HTTPS
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: 'lax',
-        path: '/'
+        secure: false, // Always false - let Hostinger handle HTTPS
+        httpOnly: false, // Changed to false for debugging
+        maxAge: 24 * 60 * 60 * 1000,
+        sameSite: 'none', // Changed to none for cross-origin
+        domain: undefined
     }
 }));
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // =====================
 // SMTP Transporter
@@ -71,11 +67,9 @@ transporter.verify((err, success) => {
 // ADMIN AUTHENTICATION MIDDLEWARE
 // =====================
 function isAdmin(req, res, next) {
-    console.log('🔍 Session check - ID:', req.sessionID, 'isAdmin:', req.session?.isAdmin);
     if (req.session && req.session.isAdmin) {
         return next();
     }
-    console.log('❌ Unauthorized access attempt');
     res.status(401).json({ success: false, message: 'Unauthorized' });
 }
 
@@ -108,16 +102,8 @@ app.post('/api/admin/login', async (req, res) => {
         if (isValid) {
             req.session.isAdmin = true;
             req.session.username = username;
-
-            // Force session save before responding
-            req.session.save((err) => {
-                if (err) {
-                    console.error('Session save error:', err);
-                    return res.status(500).json({ success: false, message: 'Session error' });
-                }
-                console.log('✅ Admin logged in:', username, 'Session ID:', req.sessionID);
-                res.json({ success: true });
-            });
+            console.log('✅ Login successful for:', username);
+            res.json({ success: true });
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
