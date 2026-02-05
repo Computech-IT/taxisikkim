@@ -19,33 +19,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/api/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify({ username, password })
             });
             const data = await res.json();
-            if (data.success) {
+            if (data.success && data.token) {
+                // Store JWT token in localStorage
+                localStorage.setItem('adminToken', data.token);
                 showDashboard();
             } else {
-                errorEl.textContent = data.message;
+                errorEl.textContent = data.message || 'Login failed';
                 errorEl.style.display = 'block';
             }
         } catch (err) {
+            console.error('Login error:', err);
             errorEl.textContent = 'Server error. Try again.';
             errorEl.style.display = 'block';
         }
     });
 
     // Logout
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-        await fetch('/api/admin/logout', { method: 'POST' });
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('adminToken');
         showLogin();
     });
 
     // Helper functions
-    async function checkAuth() {
-        const res = await fetch('/api/admin/check-auth');
-        const data = await res.json();
-        if (data.authenticated) {
+    function checkAuth() {
+        const token = localStorage.getItem('adminToken');
+        if (token) {
             showDashboard();
         } else {
             showLogin();
@@ -65,14 +66,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadVehicles() {
         vehicleTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading fleet...</td></tr>';
+        const token = localStorage.getItem('adminToken');
+
+        if (!token) {
+            showLogin();
+            return;
+        }
+
         try {
             const res = await fetch('/api/admin/vehicles', {
-                credentials: 'include' // Important for sessions
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
             if (!res.ok) {
                 if (res.status === 401) {
-                    // Session expired, redirect to login
+                    // Token expired or invalid
+                    localStorage.removeItem('adminToken');
                     showLogin();
                     return;
                 }
@@ -138,12 +149,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.deleteVehicle = async (id) => {
         if (!confirm('Are you sure you want to remove this vehicle from the fleet?')) return;
-        await fetch(`/api/admin/vehicles/${id}`, { method: 'DELETE' });
+        const token = localStorage.getItem('adminToken');
+        await fetch(`/api/admin/vehicles/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         loadVehicles();
     };
 
     vehicleForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem('adminToken');
         const id = document.getElementById('vehicleId').value;
         const payload = {
             name: document.getElementById('vehName').value,
@@ -158,7 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         await fetch(url, {
             method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify(payload)
         });
 

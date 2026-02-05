@@ -3,41 +3,25 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const path = require('path');
-const session = require('express-session');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dbMySQL = require('./db');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'taxi-sikkim-jwt-secret-2026';
 
 // =====================
 // Middleware
 // =====================
-// CORS - simplified for production
 app.use(cors({
-    origin: true, // Accept all origins for now
+    origin: true,
     credentials: true
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Simple session configuration
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'taxi-sikkim-secret-key-2026',
-    resave: true, // Changed to true for better persistence
-    saveUninitialized: false,
-    name: 'connect.sid',
-    cookie: {
-        secure: false, // Always false - let Hostinger handle HTTPS
-        httpOnly: false, // Changed to false for debugging
-        maxAge: 24 * 60 * 60 * 1000,
-        sameSite: 'none', // Changed to none for cross-origin
-        domain: undefined
-    }
-}));
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 // =====================
@@ -56,21 +40,30 @@ const transporter = nodemailer.createTransport({
 transporter.verify((err, success) => {
     if (err) {
         console.error("❌ SMTP ERROR:", err.message);
-        console.log("Config check: EMAIL_USER is", process.env.EMAIL_USER ? "Present" : "MISSING");
-        console.log("Config check: EMAIL_PASS is", process.env.EMAIL_PASS ? "Present" : "MISSING");
     } else {
-        console.log("✅ SMTP Server ready (Live at", process.env.RECEIVER_EMAIL, ")");
+        console.log("✅ SMTP Server ready");
     }
 });
 
 // =====================
-// ADMIN AUTHENTICATION MIDDLEWARE
+// ADMIN AUTHENTICATION MIDDLEWARE (JWT)
 // =====================
 function isAdmin(req, res, next) {
-    if (req.session && req.session.isAdmin) {
-        return next();
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'No token provided' });
     }
-    res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.adminUser = decoded;
+        next();
+    } catch (err) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+    }
 }
 
 // =====================
@@ -87,7 +80,7 @@ app.get('/api/vehicles', async (req, res) => {
 });
 
 // =====================
-// ADMIN AUTH ROUTES
+// ADMIN AUTH ROUTES (JWT)
 // =====================
 app.post('/api/admin/login', async (req, res) => {
     const { username, password } = req.body;
@@ -100,10 +93,15 @@ app.post('/api/admin/login', async (req, res) => {
 
         const isValid = await bcrypt.compare(password, admin.password);
         if (isValid) {
-            req.session.isAdmin = true;
-            req.session.username = username;
+            // Generate JWT token
+            const token = jwt.sign(
+                { id: admin.id, username: admin.username },
+                JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+
             console.log('✅ Login successful for:', username);
-            res.json({ success: true });
+            res.json({ success: true, token });
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
@@ -113,18 +111,7 @@ app.post('/api/admin/login', async (req, res) => {
     }
 });
 
-app.post('/api/admin/logout', (req, res) => {
-    req.session.destroy();
-    res.json({ success: true });
-});
 
-app.get('/api/admin/check-auth', (req, res) => {
-    if (req.session && req.session.isAdmin) {
-        res.json({ authenticated: true });
-    } else {
-        res.json({ authenticated: false });
-    }
-});
 
 // =====================
 // ADMIN VEHICLE CRUD
