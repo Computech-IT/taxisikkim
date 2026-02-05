@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 const bcrypt = require('bcrypt');
 const dbMySQL = require('./db');
 require('dotenv').config();
@@ -24,12 +25,17 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
+    store: new FileStore({
+        path: './sessions',
+        ttl: 86400, // 24 hours in seconds
+        retries: 0
+    }),
     secret: process.env.SESSION_SECRET || 'taxi-sikkim-secret-key',
     resave: false,
     saveUninitialized: false,
-    name: 'taxisikkim.sid', // Custom cookie name
+    name: 'taxisikkim.sid',
     cookie: {
-        secure: false, // Keep false, Hostinger's proxy will handle HTTPS
+        secure: process.env.NODE_ENV === 'production', // true for HTTPS
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         sameSite: 'lax',

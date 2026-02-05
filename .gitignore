@@ -12,6 +12,9 @@ node_modules/
 *.db-journal
 taxisikkim.db
 
+# Session files
+sessions/
+
 # Logs
 logs/
 *.log
@@ -36,9 +39,6 @@ build/
 tmp/
 temp/
 *.tmp
-
-# Session files
-sessions/
 
 # Backups
 *-backup.js
