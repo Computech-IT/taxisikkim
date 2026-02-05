@@ -1,4 +1,45 @@
+# Dependencies
 node_modules/
-dist/
+
+# Environment variables (SECURITY - DO NOT COMMIT)
 .env
+.env.local
+.env.production
+.env.hostinger
+
+# Database files (SQLite - local only)
+*.db
+*.db-journal
+taxisikkim.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build outputs (if any)
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Session files
+sessions/
+
+# Backups
+*-backup.js
+*-backup.*

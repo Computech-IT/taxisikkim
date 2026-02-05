@@ -2,7 +2,7 @@
 // IMPORTS
 // ================================
 import { $, safeValue, showToast, openWhatsApp } from './utils.js';
-import { vehicleData, bookingState } from './data.js';
+import { vehicleData, bookingState, fetchVehicles } from './data.js';
 import { submitBooking, submitEnquiry } from './api.js';
 
 // ================================
@@ -32,11 +32,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (step === 3) stepSuccess && stepSuccess.classList.add('active');
     };
 
-    const populateVehicles = () => {
+    const populateVehicles = async () => {
         if (!vehicleListContainer) return;
+        vehicleListContainer.innerHTML = `
+            <div style="text-align:center; padding: 40px; color: var(--color-text-muted);">
+                <i class="ri-loader-4-line ri-spin" style="font-size: 2rem;"></i>
+                <p>Finding available rides...</p>
+            </div>
+        `;
+
+        const data = await fetchVehicles();
         vehicleListContainer.innerHTML = '';
 
-        vehicleData.forEach(veh => {
+        if (data.length === 0) {
+            vehicleListContainer.innerHTML = '<p style="text-align:center; padding:20px;">No vehicles available at the moment.</p>';
+            return;
+        }
+
+        data.forEach(veh => {
             const card = document.createElement('div');
             card.className = 'vehicle-option';
             card.innerHTML = `

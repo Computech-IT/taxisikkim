@@ -1,9 +1,15 @@
-export const vehicleData = [
-    { id: 'WagonR', name: 'WagonR', seats: 4, rate: 2500, icon: '🚗' },
-    { id: 'Innova', name: 'Innova', seats: 7, rate: 4500, icon: '🚐' },
-    { id: 'Crysta', name: 'Innova Crysta', seats: 7, rate: 5500, icon: '✨' },
-    { id: 'Scorpio', name: 'Scorpio', seats: 7, rate: 4000, icon: '🚜' }
-];
+export let vehicleData = [];
+
+export async function fetchVehicles() {
+    try {
+        const res = await fetch('/api/vehicles');
+        vehicleData = await res.json();
+        return vehicleData;
+    } catch (err) {
+        console.error('Failed to fetch vehicles:', err);
+        return [];
+    }
+}
 
 export const bookingState = {
     pickup: '',

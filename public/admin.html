@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Sikkim Taxi Service</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+
+<body>
+    <!-- Login Screen -->
+    <div id="admin-login" class="login-container active">
+        <div class="login-card">
+            <h1 class="login-title">Admin Access</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" class="api-input" placeholder="Admin username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="api-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login to Dashboard</button>
+            </form>
+            <p id="login-error"
+                style="color: #ef4444; margin-top: 15px; text-align: center; font-size: 0.85rem; display: none;"></p>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="admin-dashboard">
+        <div class="dashboard-wrapper">
+            <header>
+                <div class="dashboard-title">Fleet Management</div>
+                <div style="display: flex; gap: 15px;">
+                    <button id="addVehicleBtn" class="btn btn-primary"><i class="ri-add-line"></i> Add New Vehicle</button>
+                    <button id="logoutBtn" class="btn btn-danger"><i class="ri-logout-box-line"></i> Logout</button>
+                </div>
+            </header>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Icon</th>
+                            <th>Vehicle Name</th>
+                            <th>Seats</th>
+                            <th>Base Rate</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehicleTableBody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Modal -->
+    <div id="vehicleModal" class="admin-modal">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="margin-top: 0; margin-bottom: 25px;">Add New Vehicle</h2>
+            <form id="vehicleForm">
+                <input type="hidden" id="vehicleId">
+                <div class="form-group">
+                    <label>Vehicle Name</label>
+                    <input type="text" id="vehName" class="api-input" placeholder="e.g. Innova Crysta" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Seats</label>
+                        <select id="vehSeats" class="api-input" required>
+                            <option value="4">4 Seater</option>
+                            <option value="5">5 Seater</option>
+                            <option value="7">7 Seater</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Base Rate (₹)</label>
+                        <input type="number" id="vehRate" class="api-input" placeholder="4500" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Icon (Emoji)</label>
+                    <input type="text" id="vehIcon" class="api-input" placeholder="🚗" value="🚗">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="vehActive" checked> Active and Visible
+                    </label>
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Vehicle</button>
+                    <button type="button" id="closeVehicleModal" class="btn btn-danger" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/admin.js"></script>
+</body>
+
+</html>

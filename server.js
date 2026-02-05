@@ -3,6 +3,9 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+const db = require('./db');
 require('dotenv').config();
 
 const app = express();
@@ -14,6 +17,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'taxi-sikkim-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public
 
 // =====================
@@ -36,6 +48,106 @@ transporter.verify((err, success) => {
         console.log("Config check: EMAIL_PASS is", process.env.EMAIL_PASS ? "Present" : "MISSING");
     } else {
         console.log("✅ SMTP Server ready (Live at", process.env.RECEIVER_EMAIL, ")");
+    }
+});
+
+// =====================
+// AUTH MIDDLEWARE
+// =====================
+const isAdmin = (req, res, next) => {
+    if (req.session && req.session.isAdmin) {
+        next();
+    } else {
+        res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+};
+
+// =====================
+// VEHICLE API (PUBLIC)
+// =====================
+app.get('/api/vehicles', (req, res) => {
+    try {
+        const vehicles = db.prepare('SELECT * FROM vehicles WHERE active = 1 ORDER BY rate ASC').all();
+        res.json(vehicles);
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to fetch vehicles' });
+    }
+});
+
+// =====================
+// ADMIN AUTH API
+// =====================
+app.post('/api/admin/login', (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username);
+        if (admin && bcrypt.compareSync(password, admin.password)) {
+            req.session.isAdmin = true;
+            req.session.username = username;
+            res.json({ success: true, message: 'Logged in successfully' });
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Login failed' });
+    }
+});
+
+app.post('/api/admin/logout', (req, res) => {
+    req.session.destroy();
+    res.json({ success: true, message: 'Logged out successfully' });
+});
+
+app.get('/api/admin/check-auth', (req, res) => {
+    if (req.session && req.session.isAdmin) {
+        res.json({ authenticated: true });
+    } else {
+        res.json({ authenticated: false });
+    }
+});
+
+// =====================
+// ADMIN VEHICLE CRUD
+// =====================
+app.get('/api/admin/vehicles', isAdmin, (req, res) => {
+    try {
+        const vehicles = db.prepare('SELECT * FROM vehicles ORDER BY id DESC').all();
+        res.json(vehicles);
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to fetch vehicles' });
+    }
+});
+
+app.post('/api/admin/vehicles', isAdmin, (req, res) => {
+    const { name, seats, rate, icon, active } = req.body;
+    try {
+        const info = db.prepare('INSERT INTO vehicles (name, seats, rate, icon, active) VALUES (?, ?, ?, ?, ?)')
+            .run(name, seats, rate, icon || '🚗', active !== undefined ? active : 1);
+        res.json({ success: true, id: info.lastInsertRowid });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to create vehicle' });
+    }
+});
+
+app.put('/api/admin/vehicles/:id', isAdmin, (req, res) => {
+    const { id } = req.params;
+    const { name, seats, rate, icon, active } = req.body;
+    try {
+        db.prepare('UPDATE vehicles SET name = ?, seats = ?, rate = ?, icon = ?, active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+            .run(name, seats, rate, icon, active, id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to update vehicle' });
+    }
+});
+
+app.delete('/api/admin/vehicles/:id', isAdmin, (req, res) => {
+    const { id } = req.params;
+    try {
+        db.prepare('DELETE FROM vehicles WHERE id = ?').run(id);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to delete vehicle' });
     }
 });
 
