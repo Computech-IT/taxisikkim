@@ -14,18 +14,26 @@ const PORT = process.env.PORT || 3000;
 // =====================
 // Middleware
 // =====================
-app.use(cors());
+// CORS must allow credentials
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production'
+        ? ['https://taxisikkim.com', 'https://www.taxisikkim.com']
+        : 'http://localhost:3000',
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: process.env.SESSION_SECRET || 'taxi-sikkim-secret-key',
     resave: false,
     saveUninitialized: false,
+    name: 'taxisikkim.sid', // Custom cookie name
     cookie: {
-        secure: false, // Set to false for now, Hostinger handles HTTPS differently
+        secure: false, // Keep false, Hostinger's proxy will handle HTTPS
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: 'lax'
+        sameSite: 'lax',
+        path: '/'
     }
 }));
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public
@@ -57,9 +65,11 @@ transporter.verify((err, success) => {
 // ADMIN AUTHENTICATION MIDDLEWARE
 // =====================
 function isAdmin(req, res, next) {
+    console.log('🔍 Session check - ID:', req.sessionID, 'isAdmin:', req.session?.isAdmin);
     if (req.session && req.session.isAdmin) {
         return next();
     }
+    console.log('❌ Unauthorized access attempt');
     res.status(401).json({ success: false, message: 'Unauthorized' });
 }
 
@@ -92,7 +102,16 @@ app.post('/api/admin/login', async (req, res) => {
         if (isValid) {
             req.session.isAdmin = true;
             req.session.username = username;
-            res.json({ success: true });
+
+            // Force session save before responding
+            req.session.save((err) => {
+                if (err) {
+                    console.error('Session save error:', err);
+                    return res.status(500).json({ success: false, message: 'Session error' });
+                }
+                console.log('✅ Admin logged in:', username, 'Session ID:', req.sessionID);
+                res.json({ success: true });
+            });
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
