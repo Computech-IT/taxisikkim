@@ -1,15 +1,16 @@
-// server.js
+// server.js - Local Development with SQLite
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const path = require('path');
-const session = require('express-session');
+const jwt = require('jsonwebtoken'); // Changed from session to jwt
 const bcrypt = require('bcrypt');
 const db = require('./db');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'taxi-sikkim-jwt-secret-2026';
 
 // =====================
 // Middleware
@@ -17,15 +18,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'taxi-sikkim-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-}));
+// Removed session middleware
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public
 
 // =====================
@@ -43,22 +36,31 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((err, success) => {
     if (err) {
-        console.error("❌ SMTP ERROR:", err.message);
-        console.log("Config check: EMAIL_USER is", process.env.EMAIL_USER ? "Present" : "MISSING");
-        console.log("Config check: EMAIL_PASS is", process.env.EMAIL_PASS ? "Present" : "MISSING");
+        // console.error("❌ SMTP ERROR:", err.message);
+        // Suppress error in local dev if credentials aren't set
     } else {
-        console.log("✅ SMTP Server ready (Live at", process.env.RECEIVER_EMAIL, ")");
+        console.log("✅ SMTP Server ready");
     }
 });
 
 // =====================
-// AUTH MIDDLEWARE
+// AUTH MIDDLEWARE (JWT)
 // =====================
 const isAdmin = (req, res, next) => {
-    if (req.session && req.session.isAdmin) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'No token provided' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.adminUser = decoded;
         next();
-    } else {
-        res.status(401).json({ success: false, message: 'Unauthorized' });
+    } catch (err) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
     }
 };
 
@@ -75,16 +77,20 @@ app.get('/api/vehicles', (req, res) => {
 });
 
 // =====================
-// ADMIN AUTH API
+// ADMIN AUTH API (JWT)
 // =====================
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body;
     try {
         const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username);
         if (admin && bcrypt.compareSync(password, admin.password)) {
-            req.session.isAdmin = true;
-            req.session.username = username;
-            res.json({ success: true, message: 'Logged in successfully' });
+            // Generate JWT token
+            const token = jwt.sign(
+                { id: admin.id, username: admin.username },
+                JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+            res.json({ success: true, token });
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
@@ -93,17 +99,10 @@ app.post('/api/admin/login', (req, res) => {
     }
 });
 
-app.post('/api/admin/logout', (req, res) => {
-    req.session.destroy();
-    res.json({ success: true, message: 'Logged out successfully' });
-});
+// Removed logout endpoint as it's handled client-side with JWT
 
-app.get('/api/admin/check-auth', (req, res) => {
-    if (req.session && req.session.isAdmin) {
-        res.json({ authenticated: true });
-    } else {
-        res.json({ authenticated: false });
-    }
+app.get('/api/admin/check-auth', isAdmin, (req, res) => {
+    res.json({ authenticated: true, user: req.adminUser });
 });
 
 // =====================
@@ -121,8 +120,8 @@ app.get('/api/admin/vehicles', isAdmin, (req, res) => {
 app.post('/api/admin/vehicles', isAdmin, (req, res) => {
     const { name, seats, rate, icon, active } = req.body;
     try {
-        const info = db.prepare('INSERT INTO vehicles (name, seats, rate, icon, active) VALUES (?, ?, ?, ?, ?)')
-            .run(name, seats, rate, icon || '🚗', active !== undefined ? active : 1);
+        const stmt = db.prepare('INSERT INTO vehicles (name, seats, rate, icon, active) VALUES (?, ?, ?, ?, ?)');
+        const info = stmt.run(name, seats, rate, icon || '🚗', active !== undefined ? active : 1);
         res.json({ success: true, id: info.lastInsertRowid });
     } catch (err) {
         res.status(500).json({ success: false, message: 'Failed to create vehicle' });
@@ -133,8 +132,8 @@ app.put('/api/admin/vehicles/:id', isAdmin, (req, res) => {
     const { id } = req.params;
     const { name, seats, rate, icon, active } = req.body;
     try {
-        db.prepare('UPDATE vehicles SET name = ?, seats = ?, rate = ?, icon = ?, active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-            .run(name, seats, rate, icon, active, id);
+        const stmt = db.prepare('UPDATE vehicles SET name = ?, seats = ?, rate = ?, icon = ?, active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
+        stmt.run(name, seats, rate, icon, active, id);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ success: false, message: 'Failed to update vehicle' });
@@ -144,7 +143,8 @@ app.put('/api/admin/vehicles/:id', isAdmin, (req, res) => {
 app.delete('/api/admin/vehicles/:id', isAdmin, (req, res) => {
     const { id } = req.params;
     try {
-        db.prepare('DELETE FROM vehicles WHERE id = ?').run(id);
+        const stmt = db.prepare('DELETE FROM vehicles WHERE id = ?');
+        stmt.run(id);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ success: false, message: 'Failed to delete vehicle' });
