@@ -136,6 +136,61 @@ document.addEventListener('DOMContentLoaded', () => {
         vehicleModal.classList.remove('active');
     });
 
+
+    // Password Modal Logic
+    const passwordModal = document.getElementById('passwordModal');
+    const passwordForm = document.getElementById('passwordForm');
+
+    document.getElementById('changePasswordBtn').addEventListener('click', () => {
+        passwordForm.reset();
+        passwordModal.classList.add('active');
+    });
+
+    document.getElementById('closePasswordModal').addEventListener('click', () => {
+        passwordModal.classList.remove('active');
+    });
+
+    passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword.length < 6) {
+            alert('New password must be at least 6 characters long');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert('New passwords do not match');
+            return;
+        }
+
+        const token = localStorage.getItem('adminToken');
+        try {
+            const res = await fetch('/api/admin/password', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ currentPassword, newPassword })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                alert('Password updated successfully!');
+                passwordModal.classList.remove('active');
+            } else {
+                alert(data.message || 'Failed to update password');
+            }
+        } catch (err) {
+            console.error('Password update error:', err);
+            alert('Server error. Please try again.');
+        }
+    });
+
     window.editVehicle = (veh) => {
         document.getElementById('modalTitle').textContent = 'Modify Vehicle';
         document.getElementById('vehicleId').value = veh.id;

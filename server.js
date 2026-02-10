@@ -101,6 +101,40 @@ app.post('/api/admin/login', (req, res) => {
 
 // Removed logout endpoint as it's handled client-side with JWT
 
+app.put('/api/admin/password', isAdmin, (req, res) => {
+    console.log('Password update request received for user:', req.adminUser.username);
+    const { currentPassword, newPassword } = req.body;
+    const { id } = req.adminUser;
+
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ success: false, message: 'Both current and new passwords are required' });
+    }
+
+    try {
+        const admin = db.prepare('SELECT * FROM admins WHERE id = ?').get(id);
+
+        if (!admin) {
+            console.error('Admin not found for ID:', id);
+            return res.status(404).json({ success: false, message: 'Admin not found' });
+        }
+
+        const isMatch = bcrypt.compareSync(currentPassword, admin.password);
+        if (!isMatch) {
+            console.warn('Password mismatch for user:', req.adminUser.username);
+            return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+        }
+
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+        const result = db.prepare('UPDATE admins SET password = ? WHERE id = ?').run(hashedPassword, id);
+
+        console.log('Password updated successfully for user:', req.adminUser.username);
+        res.json({ success: true, message: 'Password updated successfully' });
+    } catch (err) {
+        console.error('SERVER_ERROR [Password Update]:', err);
+        res.status(500).json({ success: false, message: 'Failed to update password' });
+    }
+});
+
 app.get('/api/admin/check-auth', isAdmin, (req, res) => {
     res.json({ authenticated: true, user: req.adminUser });
 });
