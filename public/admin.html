@@ -14,19 +14,21 @@
 
 <body>
     <!-- Login Screen -->
-    <div id="admin-login" class="login-container active">
-        <div class="login-card">
+    <div id="admin-login" class="login-container">
+        <div class="login-card glass-panel">
             <h1 class="login-title">Admin Access</h1>
             <form id="loginForm">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" id="username" class="api-input" placeholder="Admin username" required>
+                    <input type="text" id="username" class="api-input" placeholder="Enter admin username" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" id="password" class="api-input" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Login to Dashboard</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    Login to Dashboard <i class="ri-arrow-right-line"></i>
+                </button>
             </form>
             <p id="login-error"
                 style="color: #ef4444; margin-top: 15px; text-align: center; font-size: 0.85rem; display: none;"></p>
@@ -36,15 +38,18 @@
     <!-- Dashboard Screen -->
     <div id="admin-dashboard">
         <div class="dashboard-wrapper">
-            <header>
-                <div class="dashboard-title">Fleet Management</div>
+            <header class="glass-panel">
+                <div class="dashboard-title">
+                    <i class="ri-dashboard-3-line" style="color: var(--neon-cyan);"></i>
+                    Fleet Management
+                </div>
                 <div style="display: flex; gap: 15px;">
-                    <button id="addVehicleBtn" class="btn btn-primary"><i class="ri-add-line"></i> Add New Vehicle</button>
+                    <button id="addVehicleBtn" class="btn btn-primary"><i class="ri-add-line"></i> Add Vehicle</button>
                     <button id="logoutBtn" class="btn btn-danger"><i class="ri-logout-box-line"></i> Logout</button>
                 </div>
             </header>
 
-            <div class="table-container">
+            <div class="table-container glass-panel">
                 <table>
                     <thead>
                         <tr>
