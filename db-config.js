@@ -1,17 +1,1 @@
-require('dotenv').config();
-
-const dbConfig = {
-    // MySQL config (for production on Hostinger)
-    mysql: {
-        host: process.env.DB_HOST || 'localhost',
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        port: process.env.DB_PORT || 3306,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0
-    }
-};
-
-module.exports = dbConfig;
+const a0_0x5f30c4=a0_0x34cd;function a0_0x3f21(){const _0x553cb2=['3336770gyXpDN','7311030kMxIkU','3232222fdxqrL','config','669527CSqyZw','exports','422176DiTZvI','dotenv','143438aBWqGB','15496456IKyuEx','33Yholzi'];a0_0x3f21=function(){return _0x553cb2;};return a0_0x3f21();}function a0_0x34cd(_0x2b318a,_0x5133fd){_0x2b318a=_0x2b318a-0xd8;const _0x3f2197=a0_0x3f21();let _0x34cd69=_0x3f2197[_0x2b318a];return _0x34cd69;}(function(_0x5eb313,_0x7a93b4){const _0x38e6fb=a0_0x34cd,_0x5b039d=_0x5eb313();while(!![]){try{const _0x465822=-parseInt(_0x38e6fb(0xdd))/0x1+parseInt(_0x38e6fb(0xe1))/0x2*(parseInt(_0x38e6fb(0xd8))/0x3)+parseInt(_0x38e6fb(0xdf))/0x4+parseInt(_0x38e6fb(0xd9))/0x5+parseInt(_0x38e6fb(0xda))/0x6+parseInt(_0x38e6fb(0xdb))/0x7+-parseInt(_0x38e6fb(0xe2))/0x8;if(_0x465822===_0x7a93b4)break;else _0x5b039d['push'](_0x5b039d['shift']());}catch(_0x37fe85){_0x5b039d['push'](_0x5b039d['shift']());}}}(a0_0x3f21,0x9b252),require(a0_0x5f30c4(0xe0))[a0_0x5f30c4(0xdc)]());const dbConfig={'mysql':{'host':process.env.DB_HOST||'localhost','user':process.env.DB_USER,'password':process.env.DB_PASSWORD,'database':process.env.DB_NAME,'port':process.env.DB_PORT||0xcea,'waitForConnections':!![],'connectionLimit':0xa,'queueLimit':0x0}};module[a0_0x5f30c4(0xde)]=dbConfig;

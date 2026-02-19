@@ -43,3 +43,6 @@ temp/
 # Backups
 *-backup.js
 *-backup.*
+source-backup/
+hostinger-setup.sql
+mysql-import.sql
