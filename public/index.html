@@ -214,6 +214,24 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="review-cta-container reveal">
+                    <div class="review-stats">
+                        <span class="rating-value">4.9</span>
+                        <div class="stars">
+                            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i
+                                class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                        </div>
+                        <span>based on 500+ happy travelers</span>
+                    </div>
+                    <button id="openReviewModal" class="btn-premium-review">
+                        <span>Share Your Experience</span>
+                        <i class="ri-edit-2-line"></i>
+                    </button>
+                    <p style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px;">
+                        Transparent & Verified Feedbacks ✦
+                    </p>
+                </div>
             </section>
 
             <!-- Enquiry Section -->
@@ -359,6 +377,59 @@
 
             <!-- Sticky Mobile CTA -->
             <a href="#hero" class="mobile-sticky-cta">Book Your Ride <i class="ri-arrow-right-line"></i></a>
+        </div>
+
+        <!-- Modals Layer (Always at Root for proper stacking) -->
+        <div id="reviewModal" class="modal-overlay">
+            <div class="modal-card" style="max-width: 500px;">
+                <button id="closeReviewModal" class="btn-close" type="button">×</button>
+                <h2 class="modal-title">Share Your Experience</h2>
+                <p style="color: var(--color-text-secondary); margin-bottom: 20px; text-align: center;">Your feedback
+                    helps us improve
+                    our service for everyone.</p>
+
+                <form id="reviewForm" class="booking-form-fields"
+                    style="display: flex; flex-direction: column; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="rev-name" name="author_name" class="app-input"
+                            placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Rating</label>
+                        <div class="star-rating-input"
+                            style="display: flex; gap: 10px; font-size: 1.5rem; color: #fbbf24; cursor: pointer; justify-content: center; margin-bottom: 10px;">
+                            <i class="ri-star-line" data-value="1"></i>
+                            <i class="ri-star-line" data-value="2"></i>
+                            <i class="ri-star-line" data-value="3"></i>
+                            <i class="ri-star-line" data-value="4"></i>
+                            <i class="ri-star-line" data-value="5"></i>
+                        </div>
+                        <input type="hidden" id="rev-rating" name="rating" value="5">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Your Review</label>
+                        <textarea id="rev-text" name="text" class="app-input" placeholder="Tell us about your trip..."
+                            rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Add a Photo (Optional)</label>
+                        <input type="file" id="rev-image" name="image" class="app-input" accept="image/*"
+                            style="padding: 10px;">
+                        <div id="image-preview" style="margin-top: 10px; display: none;">
+                            <img src="" alt="Preview"
+                                style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-black" style="width: 100%; margin-top: 10px;">Post
+                        Review</button>
+                    <div id="rev-inline-notification" class="inline-notification"></div>
+                </form>
+            </div>
         </div>
 
         <!-- Scripts -->

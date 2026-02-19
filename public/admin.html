@@ -41,8 +41,12 @@
             <header class="glass-panel">
                 <div class="dashboard-title">
                     <i class="ri-dashboard-3-line" style="color: var(--neon-cyan);"></i>
-                    Fleet Management
+                    Admin Dashboard
                 </div>
+                <nav class="admin-nav">
+                    <button class="nav-btn active" data-target="fleet-section">Fleet</button>
+                    <button class="nav-btn" data-target="reviews-section">Guest Stories</button>
+                </nav>
                 <div style="display: flex; gap: 15px;">
                     <button id="addVehicleBtn" class="btn btn-primary"><i class="ri-add-line"></i> Add Vehicle</button>
                     <button id="changePasswordBtn" class="btn btn-primary"
@@ -52,22 +56,45 @@
                 </div>
             </header>
 
-            <div class="table-container glass-panel">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Icon</th>
-                            <th>Vehicle Name</th>
-                            <th>Seats</th>
-                            <th>Base Rate</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="vehicleTableBody">
-                        <!-- Loaded dynamically -->
-                    </tbody>
-                </table>
+            <div id="fleet-section" class="dash-section active">
+                <div class="table-container glass-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Vehicle Name</th>
+                                <th>Seats</th>
+                                <th>Base Rate</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehicleTableBody">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="reviews-section" class="dash-section">
+                <div class="table-container glass-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Author</th>
+                                <th>Rating</th>
+                                <th>Review Text</th>
+                                <th>Image</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviewsTableBody">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -134,6 +161,37 @@
                     <button type="submit" class="btn btn-primary" style="flex: 1;">Update Password</button>
                     <button type="button" id="closePasswordModal" class="btn btn-danger"
                         style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="admin-modal">
+        <div class="modal-content glass-panel" style="max-width: 600px;">
+            <h2 id="reviewModalTitle" style="margin-top: 0; margin-bottom: 25px;">Moderate Review</h2>
+            <form id="reviewEditForm">
+                <input type="hidden" id="reviewId">
+                <div class="form-group">
+                    <label>Author Name</label>
+                    <input type="text" id="revAuthor" class="api-input" required>
+                </div>
+                <div class="form-group">
+                    <label>Rating (1-5)</label>
+                    <input type="number" id="revRating" class="api-input" min="1" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label>Review Text</label>
+                    <textarea id="revText" class="api-input" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="revApproved"> Approved and Published
+                    </label>
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Changes</button>
+                    <button type="button" id="closeReviewModal" class="btn btn-danger" style="flex: 1;">Cancel</button>
                 </div>
             </form>
         </div>

@@ -167,6 +167,42 @@ app.delete('/api/admin/vehicles/:id', isAdmin, async (req, res) => {
 });
 
 // =====================
+// ADMIN REVIEWS CRUD
+// =====================
+app.get('/api/admin/reviews', isAdmin, async (req, res) => {
+    try {
+        const reviews = await dbMySQL.query('SELECT * FROM reviews ORDER BY created_at DESC');
+        res.json(reviews);
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to fetch all reviews' });
+    }
+});
+
+app.put('/api/admin/reviews/:id', isAdmin, async (req, res) => {
+    const { id } = req.params;
+    const { author_name, rating, text, approved } = req.body;
+    try {
+        await dbMySQL.query(
+            'UPDATE reviews SET author_name = ?, rating = ?, text = ?, approved = ? WHERE id = ?',
+            [author_name, rating, text, approved, id]
+        );
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to update review' });
+    }
+});
+
+app.delete('/api/admin/reviews/:id', isAdmin, async (req, res) => {
+    const { id } = req.params;
+    try {
+        await dbMySQL.query('DELETE FROM reviews WHERE id = ?', [id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to delete review' });
+    }
+});
+
+// =====================
 // BOOKING SUBMISSION
 // =====================
 app.post('/api/book', async (req, res) => {
@@ -250,6 +286,70 @@ app.post('/api/enquiry', async (req, res) => {
     } catch (error) {
         console.error('Enquiry email error:', error);
         res.status(500).json({ success: false, message: 'Failed to submit enquiry. Please try again.' });
+    }
+});
+
+// =====================
+// MULTER CONFIG (UPLOADS)
+// =====================
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads/reviews/');
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only images are allowed!'));
+        }
+    }
+});
+
+// =====================
+// REVIEWS API (LOCAL)
+// =====================
+
+// Get approved reviews
+app.get('/api/reviews', async (req, res) => {
+    try {
+        const reviews = await dbMySQL.query('SELECT * FROM reviews WHERE approved = 1 ORDER BY created_at DESC');
+        res.json({
+            success: true,
+            reviews: reviews
+        });
+    } catch (err) {
+        console.error('SERVER_ERROR [Get Reviews]:', err);
+        res.status(500).json({ success: false, message: 'Failed to fetch reviews' });
+    }
+});
+
+// Post a new review
+app.post('/api/reviews', upload.single('image'), async (req, res) => {
+    const { author_name, rating, text } = req.body;
+    const image_path = req.file ? `/uploads/reviews/${req.file.filename}` : null;
+
+    if (!author_name || !rating || !text) {
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+
+    try {
+        await dbMySQL.query(
+            'INSERT INTO reviews (author_name, rating, text, image_path, approved) VALUES (?, ?, ?, ?, ?)',
+            [author_name, parseInt(rating), text, image_path, 1] // Auto-approving for now
+        );
+        res.json({ success: true, message: 'Review submitted successfully!' });
+    } catch (err) {
+        console.error('SERVER_ERROR [Post Review]:', err);
+        res.status(500).json({ success: false, message: 'Failed to submit review' });
     }
 });
 

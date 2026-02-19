@@ -32,6 +32,19 @@ function initDb() {
         )
     `).run();
 
+    // Reviews Table
+    db.prepare(`
+        CREATE TABLE IF NOT EXISTS reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            author_name TEXT NOT NULL,
+            rating INTEGER NOT NULL,
+            text TEXT NOT NULL,
+            image_path TEXT,
+            approved INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `).run();
+
     seedData();
 }
 

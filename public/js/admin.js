@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const vehicleTableBody = document.getElementById('vehicleTableBody');
     const vehicleModal = document.getElementById('vehicleModal');
     const vehicleForm = document.getElementById('vehicleForm');
+    const reviewsTableBody = document.getElementById('reviewsTableBody');
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewEditForm = document.getElementById('reviewEditForm');
 
     // Check Auth initially
     checkAuth();
@@ -57,12 +60,31 @@ document.addEventListener('DOMContentLoaded', () => {
         loginSection.classList.remove('active');
         dashboardSection.classList.add('active');
         loadVehicles();
+        loadReviews();
     }
 
     function showLogin() {
         dashboardSection.classList.remove('active');
         loginSection.classList.add('active');
     }
+
+    // Dashboard Navigation
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+
+            // Update buttons
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Update sections
+            document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+
+            // Toggle "Add Vehicle" button visibility
+            document.getElementById('addVehicleBtn').style.display = (targetId === 'fleet-section') ? 'inline-flex' : 'none';
+        });
+    });
 
     async function loadVehicles() {
         vehicleTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading fleet...</td></tr>';
@@ -121,6 +143,50 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error('Error loading vehicles:', err);
             vehicleTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: #ef4444;">Error loading vehicles. Please refresh the page.</td></tr>';
+        }
+    }
+
+    async function loadReviews() {
+        if (!reviewsTableBody) return;
+        reviewsTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading stories...</td></tr>';
+        const token = localStorage.getItem('adminToken');
+
+        try {
+            const res = await fetch('/api/admin/reviews', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!res.ok) throw new Error('Failed to load reviews');
+            const reviews = await res.json();
+
+            reviewsTableBody.innerHTML = '';
+            if (reviews.length === 0) {
+                reviewsTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No stories found.</td></tr>';
+                return;
+            }
+
+            reviews.forEach(rev => {
+                const tr = document.createElement('tr');
+                const date = new Date(rev.created_at).toLocaleDateString();
+                const image = rev.image_path ? `<img src="${rev.image_path}" style="height: 40px; border-radius: 4px;">` : '-';
+
+                tr.innerHTML = `
+                    <td style="font-size: 0.8rem; color: var(--text-dim);">${date}</td>
+                    <td style="font-weight: 600;">${rev.author_name}</td>
+                    <td><span style="color: #fbbf24;"><i class="ri-star-fill"></i> ${rev.rating}</span></td>
+                    <td style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.85rem;">${rev.text}</td>
+                    <td>${image}</td>
+                    <td><span class="status-badge ${rev.approved ? 'status-active' : 'status-inactive'}">${rev.approved ? 'Approved' : 'Pending'}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="editReview(${JSON.stringify(rev).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 0.8rem; margin-right: 5px;">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteReview(${rev.id})" style="padding: 5px 10px; font-size: 0.8rem;">Delete</button>
+                    </td>
+                `;
+                reviewsTableBody.appendChild(tr);
+            });
+        } catch (err) {
+            console.error('Error loading reviews:', err);
+            reviewsTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color: #ef4444;">Error loading stories.</td></tr>';
         }
     }
 
@@ -213,6 +279,53 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         loadVehicles();
     };
+
+    window.editReview = (rev) => {
+        document.getElementById('reviewId').value = rev.id;
+        document.getElementById('revAuthor').value = rev.author_name;
+        document.getElementById('revRating').value = rev.rating;
+        document.getElementById('revText').value = rev.text;
+        document.getElementById('revApproved').checked = !!rev.approved;
+        reviewModal.classList.add('active');
+    };
+
+    document.getElementById('closeReviewModal').addEventListener('click', () => {
+        reviewModal.classList.remove('active');
+    });
+
+    window.deleteReview = async (id) => {
+        if (!confirm('Permanently delete this guest story?')) return;
+        const token = localStorage.getItem('adminToken');
+        await fetch(`/api/admin/reviews/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        loadReviews();
+    };
+
+    reviewEditForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('adminToken');
+        const id = document.getElementById('reviewId').value;
+        const payload = {
+            author_name: document.getElementById('revAuthor').value,
+            rating: parseInt(document.getElementById('revRating').value),
+            text: document.getElementById('revText').value,
+            approved: document.getElementById('revApproved').checked ? 1 : 0
+        };
+
+        await fetch(`/api/admin/reviews/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+
+        reviewModal.classList.remove('active');
+        loadReviews();
+    });
 
     vehicleForm.addEventListener('submit', async (e) => {
         e.preventDefault();

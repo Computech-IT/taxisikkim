@@ -3,7 +3,7 @@
 // ================================
 import { $, safeValue, showToast, openWhatsApp } from './utils.js';
 import { vehicleData, bookingState, fetchVehicles } from './data.js';
-import { submitBooking, submitEnquiry } from './api.js';
+import { submitBooking, submitEnquiry, fetchReviews, submitReview } from './api.js';
 
 // ================================
 // DOM READY
@@ -11,16 +11,45 @@ import { submitBooking, submitEnquiry } from './api.js';
 document.addEventListener('DOMContentLoaded', () => {
 
     // ================================
-    // MODAL FLOW MANAGEMENT
+    // MODAL FLOW MANAGEMENT (Robust)
     // ================================
-    const modal = $('bookingModal');
-    const modalClose = $('closeModal');
+    const bookingModal = $('bookingModal');
+    const reviewModal = $('reviewModal');
+
+    // Unified Modal Toggle function
+    const toggleModal = (modalEl, show = true) => {
+        if (!modalEl) return;
+        console.log(`Toggling Modal ${modalEl.id}: ${show}`);
+        if (show) {
+            modalEl.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scroll
+        } else {
+            modalEl.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    };
+
+    // Review Modal Open
+    const openReviewBtn = $('openReviewModal');
+    const starRatingInput = document.querySelector('.star-rating-input');
+    const ratingInput = $('rev-rating');
+    const imageInput = $('rev-image');
+    const imagePreview = $('image-preview');
+    const reviewForm = $('reviewForm');
+
+    if (openReviewBtn) {
+        openReviewBtn.addEventListener('click', (e) => {
+            console.log('Review Button Clicked');
+            e.preventDefault();
+            toggleModal(reviewModal, true);
+        });
+    }
+
     const stepSelection = $('modal-step-selection');
     const stepConfirmation = $('modal-step-confirmation');
     const stepSuccess = $('modal-step-success');
     const vehicleListContainer = $('vehicle-selection-list');
     const backBtn = $('backToSelection');
-    const closeSuccessBtn = $('closeSuccessModal');
     const whatsappBtn = $('whatsapp-booking-btn');
     const inlineNotify = $('form-inline-notification');
     const enqInlineNotify = $('enq-inline-notification');
@@ -31,6 +60,30 @@ document.addEventListener('DOMContentLoaded', () => {
         if (step === 2) stepConfirmation && stepConfirmation.classList.add('active');
         if (step === 3) stepSuccess && stepSuccess.classList.add('active');
     };
+
+    // Close buttons for both modals
+    document.querySelectorAll('.btn-close, .modal-overlay').forEach(el => {
+        el.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-close') || e.target.classList.contains('modal-overlay')) {
+                const targetModal = e.target.closest('.modal-overlay');
+                toggleModal(targetModal, false);
+            }
+        });
+    });
+
+    // Booking Modal Open Buttons (all .book-btn)
+    document.querySelectorAll('.book-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            console.log('Booking Button Clicked');
+            bookingState.pickup = '';
+            bookingState.drop = '';
+            bookingState.date = '';
+            toggleModal(bookingModal, true);
+            populateVehicles();
+            showStep(1);
+        });
+    });
+
 
     const populateVehicles = async () => {
         if (!vehicleListContainer) return;
@@ -88,22 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
         showStep(2);
     };
 
+    const closeSuccessBtn = $('closeSuccessModal');
     if (backBtn) backBtn.addEventListener('click', () => showStep(1));
-    if (closeSuccessBtn) closeSuccessBtn.addEventListener('click', () => modal && modal.classList.remove('active'));
+    if (closeSuccessBtn) closeSuccessBtn.addEventListener('click', () => toggleModal(bookingModal, false));
 
-    // ================================
-    // EVENT LISTENERS
-    // ================================
-    document.querySelectorAll('.book-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            bookingState.pickup = '';
-            bookingState.drop = '';
-            bookingState.date = '';
-            modal && modal.classList.add('active');
-            populateVehicles();
-            showStep(1);
-        });
-    });
 
     const rideFinderForm = $('mainBookingForm');
     if (rideFinderForm) {
@@ -117,27 +158,20 @@ document.addEventListener('DOMContentLoaded', () => {
             safeValue('book-drop', bookingState.drop);
             safeValue('book-date', bookingState.date);
 
-            modal && modal.classList.add('active');
+            toggleModal(bookingModal, true);
             populateVehicles();
             showStep(1);
         });
     }
 
-    if (modalClose) modalClose.addEventListener('click', () => modal && modal.classList.remove('active'));
-
-    // Close modal when clicking outside
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
-        });
-    }
+    const modalClose = $('closeModal');
+    if (modalClose) modalClose.addEventListener('click', () => toggleModal(bookingModal, false));
 
     // Close modal on Escape
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
-            modal.classList.remove('active');
+        if (e.key === 'Escape') {
+            toggleModal(bookingModal, false);
+            toggleModal(reviewModal, false);
         }
     });
 
@@ -198,6 +232,126 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             const submitBtn = e.target.querySelector('button[type="submit"]');
             submitEnquiry(payload, { submitBtn, enquiryForm, enqInlineNotify });
+        });
+    }
+
+    // ================================
+    // REVIEW POPULATION
+    // ================================
+    const testimonialsRow = document.querySelector('.testimonials-row');
+
+    const populateReviews = async () => {
+        if (!testimonialsRow) return;
+
+        const data = await fetchReviews();
+        if (!data.success || !data.reviews) return;
+
+        // If no reviews in DB, keep the static ones (don't clear)
+        if (data.reviews.length === 0) return;
+
+        // Clear existing reviews
+        testimonialsRow.innerHTML = '';
+
+        data.reviews.forEach(review => {
+            const card = document.createElement('div');
+            card.className = 'testimonial-card-white';
+            card.style.cssText = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px); display: flex; flex-direction: column; justify-content: space-between;';
+
+            // Star rating HTML
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                stars += `<i class="${i <= review.rating ? 'ri-star-fill' : 'ri-star-line'}"></i>`;
+            }
+
+            const imageHtml = review.image_path
+                ? `<img src="${review.image_path}" class="review-card-image" alt="Review photo">`
+                : '';
+
+            card.innerHTML = `
+                <div>
+                    <div style="color: #fbbf24; margin-bottom: 20px; font-size: 0.95rem;">
+                        ${stars}
+                    </div>
+                    ${imageHtml}
+                    <p style="margin-bottom: 30px; font-style: italic; color: rgba(255,255,255,0.95); font-size: 1.05rem; line-height: 1.7;">
+                        "${review.text}"
+                    </p>
+                </div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px;">
+                    <div style="font-weight: 700; color: white; font-size: 1.1rem; margin-bottom: 4px;">${review.author_name}</div>
+                    <div style="font-size: 0.85rem; color: var(--color-electric); font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <i class="ri-checkbox-circle-fill"></i> Verified Customer
+                    </div>
+                </div>
+            `;
+            testimonialsRow.appendChild(card);
+        });
+    };
+
+    populateReviews();
+
+
+
+    // Star Rating Logic
+    if (starRatingInput) {
+        const stars = starRatingInput.querySelectorAll('i');
+        stars.forEach(star => {
+            star.addEventListener('mouseenter', () => {
+                const val = parseInt(star.dataset.value);
+                stars.forEach((s, idx) => {
+                    s.className = (idx < val) ? 'ri-star-fill' : 'ri-star-line';
+                });
+            });
+
+            star.addEventListener('click', () => {
+                const val = star.dataset.value;
+                ratingInput.value = val;
+                stars.forEach((s, idx) => {
+                    s.className = (idx < val) ? 'ri-star-fill' : 'ri-star-line';
+                });
+            });
+        });
+
+        starRatingInput.addEventListener('mouseleave', () => {
+            const val = parseInt(ratingInput.value);
+            stars.forEach((s, idx) => {
+                s.className = (idx < val) ? 'ri-star-fill' : 'ri-star-line';
+            });
+        });
+    }
+
+    // Image Preview
+    if (imageInput && imagePreview) {
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (prev) => {
+                    imagePreview.querySelector('img').src = prev.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        });
+    }
+
+    // Submit Review
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(reviewForm);
+            const submitBtn = reviewForm.querySelector('button[type="submit"]');
+            const inlineNotify = $('rev-inline-notification');
+
+            const success = await submitReview(formData, { submitBtn, reviewForm, inlineNotify });
+            if (success) {
+                setTimeout(() => {
+                    toggleModal(reviewModal, false);
+                    populateReviews(); // Refresh list
+                }, 2000);
+            }
         });
     }
 

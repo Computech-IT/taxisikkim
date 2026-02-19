@@ -107,3 +107,51 @@ export const submitEnquiry = async (payload, { submitBtn, enquiryForm, enqInline
         showToast(err.message, 'error');
     }
 };
+
+export const fetchReviews = async () => {
+    try {
+        const res = await fetch('/api/reviews');
+        if (res.ok) {
+            return await res.json();
+        }
+        throw new Error('Failed to fetch reviews');
+    } catch (err) {
+        console.error('FETCH_REVIEWS_ERROR:', err);
+        return { success: false, reviews: [] };
+    }
+};
+
+export const submitReview = async (formData, { submitBtn, reviewForm, inlineNotify }) => {
+    try {
+        if (submitBtn) submitBtn.classList.add('btn-loading');
+
+        const res = await fetch('/api/reviews', {
+            method: 'POST',
+            body: formData // Note: No Content-Type header needed for FormData
+        });
+
+        if (submitBtn) submitBtn.classList.remove('btn-loading');
+
+        if (res.ok) {
+            if (inlineNotify) {
+                inlineNotify.textContent = 'Thank you! Your review has been posted.';
+                inlineNotify.className = 'inline-notification success';
+            }
+            showToast('Review posted successfully!');
+            reviewForm.reset();
+            return true;
+        } else {
+            const data = await res.json();
+            throw new Error(data.message || 'Failed to submit review');
+        }
+    } catch (err) {
+        console.error('FRONTEND_ERROR [Submit Review]:', err);
+        if (submitBtn) submitBtn.classList.remove('btn-loading');
+        if (inlineNotify) {
+            inlineNotify.textContent = `Error: ${err.message}`;
+            inlineNotify.className = 'inline-notification error';
+        }
+        showToast(err.message, 'error');
+        return false;
+    }
+};

@@ -37,4 +37,22 @@ admins.forEach(a => {
     console.log(`INSERT INTO admins (id, username, password) VALUES (${a.id}, '${a.username}', '${a.password}');`);
 });
 
+// Reviews table
+console.log('\n-- Reviews Table');
+console.log('CREATE TABLE IF NOT EXISTS reviews (');
+console.log('  id INT AUTO_INCREMENT PRIMARY KEY,');
+console.log('  author_name VARCHAR(255) NOT NULL,');
+console.log('  rating INT NOT NULL,');
+console.log('  text TEXT NOT NULL,');
+console.log('  image_path VARCHAR(255),');
+console.log('  approved TINYINT(1) DEFAULT 0,');
+console.log('  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
+console.log(') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n');
+
+const reviews = db.prepare('SELECT * FROM reviews').all();
+reviews.forEach(r => {
+    const escapedText = r.text.replace(/'/g, "''").replace(/\n/g, "\\n");
+    console.log(`INSERT INTO reviews (id, author_name, rating, text, image_path, approved) VALUES (${r.id}, '${r.author_name}', ${r.rating}, '${escapedText}', ${r.image_path ? `'${r.image_path}'` : 'NULL'}, ${r.approved});`);
+});
+
 console.log('\n-- Export completed!');
