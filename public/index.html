@@ -61,16 +61,29 @@
         <div class="website-content">
             <!-- Navbar -->
             <nav class="navbar">
-                <a href="/" class="brand">Sikkim Taxi Service</a>
-                <ul class="nav-links">
-                    <li><a href="#hero">Book</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#testimonials">Reviews</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <a href="tel:+919339727733"
-                    style="padding:10px 20px; background:#000; color:white; border-radius:30px; text-decoration:none; font-size:0.9rem;">Call
-                    Us</a>
+                <a href="/" class="brand">Sikkim Taxi</a>
+
+                <div class="nav-right">
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="#hero">Book</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#testimonials">Reviews</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li class="mobile-only">
+                            <a href="tel:+919339727733" class="call-btn-mobile">
+                                <i class="ri-phone-fill"></i> Call Now
+                            </a>
+                        </li>
+                    </ul>
+
+                    <a href="tel:+919339727733" class="call-btn desktop-only">
+                        <i class="ri-phone-fill"></i><span>+91 93397 27733</span>
+                    </a>
+
+                    <button class="nav-toggle" id="navToggle" aria-label="Toggle Menu">
+                        <i class="ri-menu-3-line"></i>
+                    </button>
+                </div>
             </nav>
 
             <!-- Hero Section -->

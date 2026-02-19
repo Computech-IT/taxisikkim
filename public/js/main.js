@@ -11,6 +11,36 @@ import { submitBooking, submitEnquiry, fetchReviews, submitReview } from './api.
 document.addEventListener('DOMContentLoaded', () => {
 
     // ================================
+    // MOBILE NAVIGATION
+    // ================================
+    const navToggle = $('navToggle');
+    const navLinks = $('navLinks');
+
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = navToggle.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.className = 'ri-close-line';
+                document.body.style.overflow = 'hidden';
+            } else {
+                icon.className = 'ri-menu-3-line';
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close menu when clicking links
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = navToggle.querySelector('i');
+                icon.className = 'ri-menu-3-line';
+                document.body.style.overflow = '';
+            });
+        });
+    }
+
+    // ================================
     // MODAL FLOW MANAGEMENT (Robust)
     // ================================
     const bookingModal = $('bookingModal');
