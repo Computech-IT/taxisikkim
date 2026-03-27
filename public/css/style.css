@@ -1,14 +1,17 @@
 .btn-review {
-    display: inline-block;
-    padding: 10px 20px;
+    display: flex;
     background-color: #6ce62f;
     color: #000;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 15px;
     font-weight: 600;
     margin-bottom: 20px;
     transition: 0.3s ease;
     margin-top: 20px;
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-review:hover {
