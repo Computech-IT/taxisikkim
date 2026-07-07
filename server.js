@@ -109,15 +109,50 @@ const isAdmin = (req, res, next) => {
     }
 };
 
-app.get('/diagnose', (req, res) => {
-    res.json({
+app.get('/diagnose', async (req, res) => {
+    const results = {
         DB_USER: process.env.DB_USER || '(undefined)',
         DB_NAME: process.env.DB_NAME || '(undefined)',
         DB_HOST: process.env.DB_HOST || '(undefined)',
         DB_PORT: process.env.DB_PORT || '(undefined)',
         DB_PASSWORD_LENGTH: process.env.DB_PASSWORD ? process.env.DB_PASSWORD.length : 0,
-        NODE_ENV: process.env.NODE_ENV || '(undefined)'
-    });
+        NODE_ENV: process.env.NODE_ENV || '(undefined)',
+        connectionTests: {}
+    };
+
+    const mysql = require('mysql2/promise');
+    
+    async function test(label, host, databaseName) {
+        try {
+            const conn = await mysql.createConnection({
+                host: host,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: databaseName,
+                port: parseInt(process.env.DB_PORT || 3306)
+            });
+            await conn.end();
+            results.connectionTests[label] = "✅ SUCCESS";
+        } catch (err) {
+            results.connectionTests[label] = `❌ FAILED: ${err.message}`;
+        }
+    }
+
+    // Run tests
+    const currentName = process.env.DB_NAME || '';
+    const lowercaseName = currentName.toLowerCase();
+
+    await test(`Host: 127.0.0.1 | DB: ${currentName}`, '127.0.0.1', currentName);
+    if (currentName !== lowercaseName) {
+        await test(`Host: 127.0.0.1 | DB: ${lowercaseName} (lowercase)`, '127.0.0.1', lowercaseName);
+    }
+    
+    await test(`Host: localhost | DB: ${currentName}`, 'localhost', currentName);
+    if (currentName !== lowercaseName) {
+        await test(`Host: localhost | DB: ${lowercaseName} (lowercase)`, 'localhost', lowercaseName);
+    }
+
+    res.json(results);
 });
 
 // =====================
