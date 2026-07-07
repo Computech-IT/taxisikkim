@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- SEO Meta Tags -->
+    <title>Sikkim Taxi Rental | Trusted Cab Service in Gangtok & Bagdogra</title>
+    <meta name="description"
+        content="Book the best reliable taxi in Sikkim. Premium fleet for Bagdogra airport pickup, Gangtok sightseeing, and outstation tours. Transparent pricing & 24/7 support." />
+    <meta name="keywords"
+        content="Sikkim Taxi, Gangtok Cab, Bagdogra Airport Taxi, Taxi Rental Sikkim, Car Rental Gangtok, North Sikkim Tour, Innova Crysta Rental" />
+    <meta name="author" content="Sikkim Taxi Service" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Local SEO / Geo Tags -->
+    <meta name="geo.region" content="IN-SK" />
+    <meta name="geo.placename" content="Gangtok" />
+    <meta name="geo.position" content="27.3314;88.6138" />
+    <meta name="ICBM" content="27.3314, 88.6138" />
+
+    <link rel="canonical" href="https://taxisikkim.com/" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Sikkim Taxi Rental – Premium & Reliable Cabs" />
+    <meta property="og:description"
+        content="Experience luxury and comfort with our taxi services across Sikkim. Airport pickup, local sightseeing & outstation travel at best rates." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://taxisikkim.com" />
+    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:site_name" content="Sikkim Taxi Service" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sikkim Taxi Rental – Trusted Cab Service" />
+    <meta name="twitter:description"
+        content="Book affordable and luxury taxis in Sikkim. Reliable service for tourists and locals." />
+    <meta name="twitter:image" content="/og-image.jpg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+    <div id="app">
+        <div class="map-visual"></div>
+
+        <div class="website-content">
+            <!-- Navbar -->
+            <nav class="navbar">
+                <a href="/" class="brand">Sikkim Taxi</a>
+
+                <div class="nav-right">
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="#hero">Book</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#testimonials">Reviews</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li class="mobile-only">
+                            <a href="tel:+919339727733" class="call-btn-mobile">
+                                <i class="ri-phone-fill"></i> Call Now
+                            </a>
+                        </li>
+                    </ul>
+
+                    <a href="tel:+919339727733" class="call-btn desktop-only">
+                        <i class="ri-phone-fill"></i><span>+91 93397 27733</span>
+                    </a>
+
+                    <button class="nav-toggle" id="navToggle" aria-label="Toggle Menu">
+                        <i class="ri-menu-3-line"></i>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section id="hero" class="hero-section">
+                <div class="hero-overlay">
+                    <div class="hero-content">
+                        <h2 class="hero-title">The Smartest Way to Travel in Sikkim</h2>
+                    </div>
+
+                    <!-- Professional Booking Widget -->
+                    <div class="hero-widget-container">
+                        <div class="app-widget-card booking-widget">
+                            <div class="booking-container">
+                                <h2 class="step-title">Find a Ride</h2>
+                                <form id="mainBookingForm" class="ride-finder-form">
+                                    <div class="location-inputs">
+                                        <div class="input-row">
+                                            <div class="input-icon"></div>
+                                            <input type="text" id="ride-from" class="app-input"
+                                                placeholder="From: Gtk, Bagdogra..." required>
+                                        </div>
+                                        <div class="input-row">
+                                            <div class="input-icon square"></div>
+                                            <input type="text" id="ride-to" class="app-input"
+                                                placeholder="To: Pelling, Lachen..." required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row secondary-inputs">
+                                        <div class="input-with-icon">
+                                            <i class="ri-calendar-line"></i>
+                                            <input type="date" id="ride-date" class="app-input compact" required>
+                                        </div>
+                                        <div class="input-with-icon">
+                                            <i class="ri-group-line"></i>
+                                            <select id="ride-passengers" class="app-input compact">
+                                                <option value="1-4">4 Seats</option>
+                                                <option value="5-7">7 Seats</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn-black btn-find-ride">
+                                        <span>Search Rides</span>
+                                        <i class="ri-arrow-right-line"></i>
+                                    </button>
+                                </form>
+                                
+                   <a href="#" id="leaveReviewBtn" class="btn-review">
+                        <span>Leave Review</span>
+                        <i class="ri-edit-2-line"></i>
+                    </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="section">
+                <h2 class="section-title">More than just a Taxi</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon"><i class="ri-plane-fill" style="color: #00f5ff;"></i></div>
+                        <h3>Airport Transfers</h3>
+                        <p>Punctual pickups from Bagdogra (IXB) and Pakyong. We track flights to ensure no waiting
+                            charges.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="ri-mountain-fill" style="color: #00f5ff;"></i></div>
+                        <h3>Sightseeing Packages</h3>
+                        <p>Curated tours for Nathula Pass, Tsomgo Lake, Pelling Skywalk, and North Sikkim valleys.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="ri-briefcase-4-fill" style="color: #00f5ff;"></i></div>
+                        <h3>Corporate Travel</h3>
+                        <p>Premium fleet (Innova Crysta) for business meetings and VIP delegates in Gangtok.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section id="testimonials" class="section"
+                style="background: #0f172a; padding: 100px 20px; border-top: 1px solid rgba(255,255,255,0.05);">
+                <h2 class="section-title" style="color: white; margin-bottom: 10px;">Guest Stories</h2>
+                <p style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 50px;">Real experiences from
+                    travelers who explored Sikkim with us</p>
+                    <button id="openReviewModal" class="btn-premium-review">
+                        <span>Share Your Experience</span>
+                        <i class="ri-edit-2-line"></i>
+                    </button>
+
+                <div class="testimonials-row">
+                    <div class="testimonial-card-white"
+                        style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);">
+                        <div>
+                            <div style="color: #fbbf24; margin-bottom: 15px; font-size: 0.9rem;">
+                                <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i
+                                    class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                            </div>
+                            <p style="margin-bottom: 25px; font-style: italic; color: rgba(255,255,255,0.9);">"The
+                                app-like experience made booking so easy. The driver arrived exactly on time at
+                                Bagdogra."</p>
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; color: white;">Anjali M.</div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5);"><i
+                                    class="ri-map-pin-line"></i> Mumbai, India</div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card-white"
+                        style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);">
+                        <div>
+                            <div style="color: #fbbf24; margin-bottom: 15px; font-size: 0.9rem;">
+                                <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i
+                                    class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                            </div>
+                            <p style="margin-bottom: 25px; font-style: italic; color: rgba(255,255,255,0.9);">
+                                "Transparent pricing helped us plan our budget perfectly. The Innova Crysta was brand
+                                new and very clean."</p>
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; color: white;">David Ross</div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5);"><i
+                                    class="ri-global-line"></i> United Kingdom</div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card-white"
+                        style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);">
+                        <div>
+                            <div style="color: #fbbf24; margin-bottom: 15px; font-size: 0.9rem;">
+                                <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i
+                                    class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                            </div>
+                            <p style="margin-bottom: 25px; font-style: italic; color: rgba(255,255,255,0.9);">"Sikkim
+                                Taxi Service is a total game changer. Professional drivers and no haggling needed."</p>
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; color: white;">Rahul Verma</div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5);"><i
+                                    class="ri-map-pin-line"></i> Delhi, India</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-cta-container reveal">
+                    <div class="review-stats">
+                        <span class="rating-value">4.9</span>
+                        <div class="stars">
+                            <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i
+                                class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                        </div>
+                        <span>based on 500+ happy travelers</span>
+                    </div>
+                    
+                    <p style="color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 10px;">
+                        Transparent & Verified Feedbacks ✦
+                    </p>
+                </div>
+            </section>
+
+            <!-- Enquiry Section -->
+            <section id="contact" class="section"
+                style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white;">
+                <h2 class="section-title" style="color: white; margin-bottom: 15px;">Have Questions?</h2>
+                <p style="text-align: center; max-width: 600px; margin: 0 auto 50px; opacity: 0.8;">Send us your enquiry
+                    and our team will get back to you within 24 hours</p>
+
+                <div class="enquiry-form-container">
+                    <form id="enquiryForm" class="enquiry-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label"><i class="ri-user-line"></i> Full Name</label>
+                                <input type="text" id="enq-name" class="form-input" placeholder="Enter your name"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="ri-mail-line"></i> Email Address</label>
+                                <input type="email" id="enq-email" class="form-input" placeholder="your@email.com"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label"><i class="ri-phone-line"></i> Phone Number</label>
+                                <input type="tel" id="enq-phone" class="form-input" placeholder="+91 XXXXX XXXXX"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="ri-sparkling-line"></i> Subject</label>
+                                <select id="enq-subject" class="form-input" required>
+                                    <option value="">Select a topic</option>
+                                    <option value="Booking Inquiry">Booking Inquiry</option>
+                                    <option value="Package Details">Package Details</option>
+                                    <option value="General Query">General Query</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="ri-message-3-line"></i> Your Message</label>
+                            <textarea id="enq-message" class="form-input form-textarea"
+                                placeholder="Tell us about your travel plans..." rows="5" required></textarea>
+                        </div>
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button type="submit" class="btn-submit-enquiry">Send Enquiry</button>
+                        </div>
+                        <div id="enq-inline-notification" class="inline-notification"></div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="site-footer">
+                <div style="font-size:1.5rem; font-weight:800; margin-bottom:20px;">Sikkim Taxi Service</div>
+                <p style="opacity:0.7; max-width:400px; margin:0 auto 30px;">Connecting travelers to the beauty of the
+                    Himalayas with safety and technology.</p>
+                <div style="opacity:0.5; font-size:0.9rem;">&copy; 2026 Sikkim Taxi Service. All rights reserved.</div>
+            </footer>
+        </div>
+
+        <!-- Booking Modal -->
+        <div id="bookingModal" class="modal-overlay">
+            <div class="modal-card" style="max-width: 500px;">
+                <button id="closeModal" class="btn-close" type="button">×</button>
+                <!-- Step 1: Vehicle Selection -->
+                <div id="modal-step-selection" class="modal-step active">
+                    <h2 class="modal-title">Choose Your Cab</h2>
+                    <div id="vehicle-selection-list" class="vehicle-list">
+                        <!-- Dynamically populated by JS -->
+                        <div class="selection-skeleton"
+                            style="text-align:center; padding: 40px; color: var(--color-text-muted);">
+                            <i class="ri-loader-4-line ri-spin" style="font-size: 2rem;"></i>
+                            <p>Finding available rides...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Confirmation Form -->
+                <div id="modal-step-confirmation" class="modal-step">
+                    <button id="backToSelection" class="btn-back" type="button"><i class="ri-arrow-left-s-line"></i>
+                        Back</button>
+                    <h2 class="modal-title">Complete Booking</h2>
+
+                    <div id="chosen-vehicle-summary" class="booking-summary">
+                        <!-- Dynamically populated -->
+                    </div>
+
+                    <form id="bookingForm" class="booking-form-fields"
+                        style="display: flex; flex-direction: column; gap: 15px;">
+                        <input type="hidden" id="book-vehicle">
+                        <input type="hidden" id="book-pickup">
+                        <input type="hidden" id="book-drop">
+                        <input type="hidden" id="book-date">
+
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="book-name" class="app-input" placeholder="Enter your full name"
+                                required>
+                        </div>
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" id="book-phone" class="app-input" placeholder="+91 XXXXX XXXXX"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="book-email" class="app-input" placeholder="your@email.com"
+                                    required>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
+                            <button type="submit" class="btn-black" style="width: 100%;">Confirm Booking
+                                Request</button>
+                            <button type="button" id="whatsapp-booking-btn" class="btn-whatsapp" style="width: 100%;">
+                                <i class="ri-whatsapp-line"></i> Book via WhatsApp
+                            </button>
+                        </div>
+                        <div id="form-inline-notification" class="inline-notification"></div>
+                    </form>
+                    <!-- Step 3: Success State -->
+                    <div id="modal-step-success" class="modal-step">
+                        <div class="success-visual">
+                            <div class="checkmark-wrapper">
+                                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="modal-title" style="text-align: center; margin-bottom: 10px;">Booking Confirmed!</h2>
+                        <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 30px;">Your
+                            ride request has been received. Our team will contact you within 15 minutes to finalize the
+                            details.</p>
+                        <button id="closeSuccessModal" class="btn-black" type="button">Awesome, Thanks!</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Toast Notifications -->
+            <div id="toast-container" class="toast-container"></div>
+
+            <!-- Sticky Mobile CTA -->
+            <a href="#hero" class="mobile-sticky-cta">Book Your Ride <i class="ri-arrow-right-line"></i></a>
+        </div>
+
+        <!-- Modals Layer (Always at Root for proper stacking) -->
+        <div id="reviewModal" class="modal-overlay">
+            <div class="modal-card" style="max-width: 500px;">
+                <button id="closeReviewModal" class="btn-close" type="button">×</button>
+                <h2 class="modal-title">Share Your Experience</h2>
+                <p style="color: var(--color-text-secondary); margin-bottom: 20px; text-align: center;">Your feedback
+                    helps us improve
+                    our service for everyone.</p>
+
+                <form id="reviewForm" class="booking-form-fields"
+                    style="display: flex; flex-direction: column; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="rev-name" name="author_name" class="app-input"
+                            placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Rating</label>
+                        <div class="star-rating-input"
+                            style="display: flex; gap: 10px; font-size: 1.5rem; color: #fbbf24; cursor: pointer; justify-content: center; margin-bottom: 10px;">
+                            <i class="ri-star-line" data-value="1"></i>
+                            <i class="ri-star-line" data-value="2"></i>
+                            <i class="ri-star-line" data-value="3"></i>
+                            <i class="ri-star-line" data-value="4"></i>
+                            <i class="ri-star-line" data-value="5"></i>
+                        </div>
+                        <input type="hidden" id="rev-rating" name="rating" value="5">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Your Review</label>
+                        <textarea id="rev-text" name="text" class="app-input" placeholder="Tell us about your trip..."
+                            rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Add a Photo (Optional)</label>
+                        <input type="file" id="rev-image" name="image" class="app-input" accept="image/*"
+                            style="padding: 10px;">
+                        <div id="image-preview" style="margin-top: 10px; display: none;">
+                            <img src="" alt="Preview"
+                                style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-black" style="width: 100%; margin-top: 10px;">Post
+                        Review</button>
+                    <div id="rev-inline-notification" class="inline-notification"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script type="module" src="/js/main.js"></script>
+
+        <!-- Structured Data -->
+        <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Sikkim Taxi Rental",
+    "url": "https://taxisikkim.com",
+    "telephone": "+919339727733",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Gangtok",
+      "addressRegion": "Sikkim",
+      "addressCountry": "IN"
+    },
+    "image": "https://taxisikkim.com/og-image.jpg",
+    "priceRange": "$$",
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 27.3314,
+        "longitude": 88.6138
+    }
+  }
+  </script>
+</body>
+
+</html>

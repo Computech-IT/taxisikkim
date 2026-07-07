@@ -1,1 +1,258 @@
-const a0_0x4d2e64=a0_0x53fd;(function(_0x599627,_0x4c7a53){const _0x1f3345=a0_0x53fd,_0x298c3b=_0x599627();while(!![]){try{const _0x5de9e2=parseInt(_0x1f3345(0xc4))/0x1+parseInt(_0x1f3345(0xc3))/0x2*(parseInt(_0x1f3345(0xcd))/0x3)+-parseInt(_0x1f3345(0xd0))/0x4*(parseInt(_0x1f3345(0xbd))/0x5)+parseInt(_0x1f3345(0xbe))/0x6*(-parseInt(_0x1f3345(0xc1))/0x7)+parseInt(_0x1f3345(0xb0))/0x8*(-parseInt(_0x1f3345(0xcf))/0x9)+-parseInt(_0x1f3345(0xb8))/0xa*(-parseInt(_0x1f3345(0xa9))/0xb)+-parseInt(_0x1f3345(0xa8))/0xc;if(_0x5de9e2===_0x4c7a53)break;else _0x298c3b['push'](_0x298c3b['shift']());}catch(_0x1f8b3b){_0x298c3b['push'](_0x298c3b['shift']());}}}(a0_0x4e4d,0xcc509));const Database=require(a0_0x4d2e64(0xad)),path=require(a0_0x4d2e64(0xaf)),bcrypt=require(a0_0x4d2e64(0xb3));require(a0_0x4d2e64(0xb5))[a0_0x4d2e64(0xc0)]();function a0_0x4e4d(){const _0x39d69b=['5uVtNKj','214494cIIWDz','join','config','21cmZvCz','forEach','39588JFrORx','1109355VukagD','✅\x20Seeded\x20initial\x20vehicle\x20data','\x0a\x20\x20\x20\x20\x20\x20\x20\x20CREATE\x20TABLE\x20IF\x20NOT\x20EXISTS\x20reviews\x20(\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20id\x20INTEGER\x20PRIMARY\x20KEY\x20AUTOINCREMENT,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20author_name\x20TEXT\x20NOT\x20NULL,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20rating\x20INTEGER\x20NOT\x20NULL,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20text\x20TEXT\x20NOT\x20NULL,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20image_path\x20TEXT,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20approved\x20INTEGER\x20DEFAULT\x200,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20created_at\x20DATETIME\x20DEFAULT\x20CURRENT_TIMESTAMP\x0a\x20\x20\x20\x20\x20\x20\x20\x20)\x0a\x20\x20\x20\x20','prepare','rate','SELECT\x20COUNT(*)\x20as\x20count\x20FROM\x20vehicles','log','\x0a\x20\x20\x20\x20\x20\x20\x20\x20CREATE\x20TABLE\x20IF\x20NOT\x20EXISTS\x20admins\x20(\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20id\x20INTEGER\x20PRIMARY\x20KEY\x20AUTOINCREMENT,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20username\x20TEXT\x20UNIQUE\x20NOT\x20NULL,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20password\x20TEXT\x20NOT\x20NULL,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20created_at\x20DATETIME\x20DEFAULT\x20CURRENT_TIMESTAMP\x0a\x20\x20\x20\x20\x20\x20\x20\x20)\x0a\x20\x20\x20\x20','✅\x20Seeded\x20default\x20admin:\x20','99XEodRx','SELECT\x20COUNT(*)\x20as\x20count\x20FROM\x20admins','13257rLDBKJ','75068YKTPUs','run','Scorpio','exports','16111032aiResz','1940521BaJlHC','count','admin','seats','better-sqlite3','WagonR','path','2800duHEPE','icon','Innova','bcrypt','Innova\x20Crysta','dotenv','taxisikkim.db','hashSync','60uZSwik','get','INSERT\x20INTO\x20admins\x20(username,\x20password)\x20VALUES\x20(?,\x20?)','name','admin123'];a0_0x4e4d=function(){return _0x39d69b;};return a0_0x4e4d();}const dbPath=path[a0_0x4d2e64(0xbf)](__dirname,a0_0x4d2e64(0xb6)),db=new Database(dbPath);function initDb(){const _0x24a7de=a0_0x4d2e64;db[_0x24a7de(0xc7)]('\x0a\x20\x20\x20\x20\x20\x20\x20\x20CREATE\x20TABLE\x20IF\x20NOT\x20EXISTS\x20vehicles\x20(\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20id\x20INTEGER\x20PRIMARY\x20KEY\x20AUTOINCREMENT,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20name\x20TEXT\x20NOT\x20NULL,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20seats\x20INTEGER\x20NOT\x20NULL,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20rate\x20INTEGER\x20NOT\x20NULL,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20icon\x20TEXT\x20DEFAULT\x20\x27🚗\x27,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20active\x20INTEGER\x20DEFAULT\x201,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20created_at\x20DATETIME\x20DEFAULT\x20CURRENT_TIMESTAMP,\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20updated_at\x20DATETIME\x20DEFAULT\x20CURRENT_TIMESTAMP\x0a\x20\x20\x20\x20\x20\x20\x20\x20)\x0a\x20\x20\x20\x20')['run'](),db[_0x24a7de(0xc7)](_0x24a7de(0xcb))['run'](),db[_0x24a7de(0xc7)](_0x24a7de(0xc6))['run'](),seedData();}function seedData(){const _0xc4be64=a0_0x4d2e64,_0x23eb85=db['prepare'](_0xc4be64(0xc9))[_0xc4be64(0xb9)]();if(_0x23eb85[_0xc4be64(0xaa)]===0x0){const _0x3f5af2=[{'name':_0xc4be64(0xae),'seats':0x4,'rate':0x9c4,'icon':'🚗'},{'name':_0xc4be64(0xb2),'seats':0x7,'rate':0x1194,'icon':'🚐'},{'name':_0xc4be64(0xb4),'seats':0x7,'rate':0x157c,'icon':'✨'},{'name':_0xc4be64(0xd2),'seats':0x7,'rate':0xfa0,'icon':'🚜'}],_0x131450=db[_0xc4be64(0xc7)]('INSERT\x20INTO\x20vehicles\x20(name,\x20seats,\x20rate,\x20icon)\x20VALUES\x20(?,\x20?,\x20?,\x20?)');_0x3f5af2[_0xc4be64(0xc2)](_0x4ed805=>_0x131450[_0xc4be64(0xd1)](_0x4ed805[_0xc4be64(0xbb)],_0x4ed805[_0xc4be64(0xac)],_0x4ed805[_0xc4be64(0xc8)],_0x4ed805[_0xc4be64(0xb1)])),console[_0xc4be64(0xca)](_0xc4be64(0xc5));}const _0x389d66=db[_0xc4be64(0xc7)](_0xc4be64(0xce))[_0xc4be64(0xb9)]();if(_0x389d66[_0xc4be64(0xaa)]===0x0){const _0x40699d=process.env.ADMIN_USERNAME||_0xc4be64(0xab),_0x171726=process.env.ADMIN_PASSWORD||_0xc4be64(0xbc),_0x5bdd71=bcrypt[_0xc4be64(0xb7)](_0x171726,0xa),_0x5ed98d=db['prepare'](_0xc4be64(0xba));_0x5ed98d[_0xc4be64(0xd1)](_0x40699d,_0x5bdd71),console[_0xc4be64(0xca)](_0xc4be64(0xcc)+_0x40699d);}}function a0_0x53fd(_0x5d0fb4,_0x26e7e6){_0x5d0fb4=_0x5d0fb4-0xa7;const _0x4e4d2c=a0_0x4e4d();let _0x53fda2=_0x4e4d2c[_0x5d0fb4];return _0x53fda2;}initDb(),module[a0_0x4d2e64(0xa7)]=db;
+const Database = require('better-sqlite3');
+const mysql = require('mysql2/promise');
+const path = require('path');
+const bcrypt = require('bcrypt');
+const dbConfig = require('./db-config');
+require('dotenv').config();
+
+let dbType = 'sqlite';
+let sqliteDb;
+let mysqlPool;
+
+// Determine DB Type: default to SQLite, switch to MySQL if explicitly requested or if env credentials are present
+if (process.env.DB_TYPE === 'mysql' || process.env.DB_USER) {
+    dbType = 'mysql';
+}
+
+async function initDb() {
+    if (dbType === 'mysql') {
+        mysqlPool = mysql.createPool(dbConfig.mysql);
+        try {
+            const connection = await mysqlPool.getConnection();
+            console.log('✅ MySQL Connected to database');
+            connection.release();
+        } catch (err) {
+            console.error('❌ MySQL Connection Error:', err.message);
+            console.error('Check your DB credentials in .env file');
+            process.exit(1);
+        }
+        await createMySQLTables();
+        await seedMySQLData();
+    } else {
+        const dbPath = path.join(__dirname, 'taxisikkim.db');
+        sqliteDb = new Database(dbPath);
+        createSQLiteTables();
+        seedSQLiteData();
+        console.log('✅ SQLite Initialized local database');
+    }
+}
+
+// Schema creation for SQLite
+function createSQLiteTables() {
+    sqliteDb.prepare(`
+        CREATE TABLE IF NOT EXISTS vehicles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            seats INTEGER NOT NULL,
+            rate INTEGER NOT NULL,
+            icon TEXT DEFAULT '🚗',
+            active INTEGER DEFAULT 1,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `).run();
+
+    sqliteDb.prepare(`
+        CREATE TABLE IF NOT EXISTS admins (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `).run();
+
+    sqliteDb.prepare(`
+        CREATE TABLE IF NOT EXISTS reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            author_name TEXT NOT NULL,
+            rating INTEGER NOT NULL,
+            text TEXT NOT NULL,
+            image_path TEXT,
+            approved INTEGER DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `).run();
+
+    sqliteDb.prepare(`
+        CREATE TABLE IF NOT EXISTS bookings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            pickup TEXT NOT NULL,
+            drop_location TEXT NOT NULL,
+            date TEXT NOT NULL,
+            vehicle_id INTEGER NOT NULL,
+            rate INTEGER NOT NULL,
+            status TEXT DEFAULT 'Pending',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `).run();
+}
+
+// Schema creation for MySQL
+async function createMySQLTables() {
+    const createVehiclesTable = `
+        CREATE TABLE IF NOT EXISTS vehicles (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            seats INT NOT NULL,
+            rate INT NOT NULL,
+            icon VARCHAR(10) DEFAULT '🚗',
+            active TINYINT(1) DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `;
+
+    const createAdminsTable = `
+        CREATE TABLE IF NOT EXISTS admins (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `;
+
+    const createReviewsTable = `
+        CREATE TABLE IF NOT EXISTS reviews (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            author_name VARCHAR(255) NOT NULL,
+            rating INT NOT NULL,
+            text TEXT NOT NULL,
+            image_path VARCHAR(255),
+            approved TINYINT(1) DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `;
+
+    const createBookingsTable = `
+        CREATE TABLE IF NOT EXISTS bookings (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            phone VARCHAR(255) NOT NULL,
+            pickup VARCHAR(255) NOT NULL,
+            drop_location VARCHAR(255) NOT NULL,
+            date VARCHAR(255) NOT NULL,
+            vehicle_id INT NOT NULL,
+            rate INT NOT NULL,
+            status VARCHAR(50) DEFAULT 'Pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    `;
+
+    await mysqlPool.query(createVehiclesTable);
+    await mysqlPool.query(createAdminsTable);
+    await mysqlPool.query(createReviewsTable);
+    await mysqlPool.query(createBookingsTable);
+}
+
+// Seed local SQLite database
+function seedSQLiteData() {
+    const vehicleCount = sqliteDb.prepare('SELECT COUNT(*) as count FROM vehicles').get();
+    if (vehicleCount.count === 0) {
+        const vehicles = [
+            { name: 'WagonR', seats: 4, rate: 2500, icon: '🚗' },
+            { name: 'Innova', seats: 7, rate: 4500, icon: '🚐' },
+            { name: 'Innova Crysta', seats: 7, rate: 5500, icon: '✨' },
+            { name: 'Scorpio', seats: 7, rate: 4000, icon: '🚜' }
+        ];
+
+        const insertVehicle = sqliteDb.prepare('INSERT INTO vehicles (name, seats, rate, icon) VALUES (?, ?, ?, ?)');
+        vehicles.forEach(v => insertVehicle.run(v.name, v.seats, v.rate, v.icon));
+        console.log('✅ Seeded initial SQLite vehicle data');
+    }
+
+    const adminCount = sqliteDb.prepare('SELECT COUNT(*) as count FROM admins').get();
+    if (adminCount.count === 0) {
+        const username = process.env.ADMIN_USERNAME || 'admin';
+        const password = process.env.ADMIN_PASSWORD || 'admin123';
+        const hashedPassword = bcrypt.hashSync(password, 10);
+
+        const insertAdmin = sqliteDb.prepare('INSERT INTO admins (username, password) VALUES (?, ?)');
+        insertAdmin.run(username, hashedPassword);
+        console.log(`✅ Seeded default SQLite admin: ${username}`);
+    }
+}
+
+// Seed production/Hostinger MySQL database
+async function seedMySQLData() {
+    try {
+        const [vehicles] = await mysqlPool.query('SELECT COUNT(*) as count FROM vehicles');
+        if (vehicles[0].count === 0) {
+            const initialVehicles = [
+                ['WagonR', 4, 2500, '🚗', 1],
+                ['Innova', 7, 4500, '🚐', 1],
+                ['Innova Crysta', 7, 5500, '✨', 1],
+                ['Scorpio', 7, 4000, '🚜', 1]
+            ];
+            await mysqlPool.query('INSERT INTO vehicles (name, seats, rate, icon, active) VALUES ?', [initialVehicles]);
+            console.log('✅ Seeded initial MySQL vehicle data');
+        }
+
+        const [admins] = await mysqlPool.query('SELECT COUNT(*) as count FROM admins');
+        if (admins[0].count === 0) {
+            const username = process.env.ADMIN_USERNAME || 'admin';
+            const password = process.env.ADMIN_PASSWORD || 'admin123';
+            const hashedPassword = await bcrypt.hash(password, 10);
+            await mysqlPool.query('INSERT INTO admins (username, password) VALUES (?, ?)', [username, hashedPassword]);
+            console.log(`✅ Seeded default MySQL admin: ${username}`);
+        }
+
+        const [reviews] = await mysqlPool.query('SELECT COUNT(*) as count FROM reviews');
+        if (reviews[0].count === 0) {
+            await mysqlPool.query('INSERT INTO reviews (author_name, rating, text, approved) VALUES (?, ?, ?, ?)',
+                ['Abhishek Sharma', 5, 'Highly recommend Sikkim Taxi Service! Very professional and the car was spotless.', 1]);
+            console.log('✅ Seeded sample MySQL review');
+        }
+    } catch (err) {
+        console.error('⚠️ MySQL Seeding Error:', err.message);
+    }
+}
+
+// Helper: Ensure params is formatted as an array for safe execution
+const toParamArray = (params) => {
+    if (params === undefined || params === null) return [];
+    return Array.isArray(params) ? params : [params];
+};
+
+// Unified queries
+async function query(sql, params = []) {
+    const paramArray = toParamArray(params);
+    if (dbType === 'mysql') {
+        const [results] = await mysqlPool.query(sql, paramArray);
+        return results;
+    } else {
+        return sqliteDb.prepare(sql).all(paramArray);
+    }
+}
+
+async function queryOne(sql, params = []) {
+    const paramArray = toParamArray(params);
+    if (dbType === 'mysql') {
+        const [results] = await mysqlPool.query(sql, paramArray);
+        return results[0] || null;
+    } else {
+        return sqliteDb.prepare(sql).get(paramArray) || null;
+    }
+}
+
+async function run(sql, params = []) {
+    const paramArray = toParamArray(params);
+    if (dbType === 'mysql') {
+        const [result] = await mysqlPool.query(sql, paramArray);
+        return { success: true, insertId: result.insertId };
+    } else {
+        const info = sqliteDb.prepare(sql).run(paramArray);
+        return { success: true, insertId: info.lastInsertRowid };
+    }
+}
+
+module.exports = {
+    initDb,
+    query,
+    queryOne,
+    run,
+    getDbType: () => dbType
+};

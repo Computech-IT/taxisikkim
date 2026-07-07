@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Booking Status | Sikkim Taxi Service</title>
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        .status-container {
+            max-width: 650px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
+        }
+
+        .status-header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .status-header-icon {
+            font-size: 3.5rem;
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        .status-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--color-text-main);
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .status-ref {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 12px;
+            border-radius: 100px;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Timeline Tracker */
+        .timeline-tracker {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 40px 0;
+            padding: 0 10px;
+        }
+
+        .timeline-tracker::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .timeline-progress-line {
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            height: 3px;
+            background: var(--color-primary);
+            z-index: 1;
+            width: 50%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            width: 80px;
+        }
+
+        .timeline-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #1e293b;
+            border: 3px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            font-size: 1.2rem;
+            transition: all 0.4s ease;
+        }
+
+        .timeline-step.completed .timeline-icon {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
+        }
+
+        .timeline-step.active .timeline-icon {
+            background: #1e293b;
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            animation: pulse-ring 1.5s infinite;
+        }
+
+        .timeline-step.cancelled .timeline-icon {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .timeline-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 10px;
+            color: var(--color-text-muted);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .timeline-step.completed .timeline-label,
+        .timeline-step.active .timeline-label {
+            color: var(--color-text-main);
+        }
+
+        .timeline-step.cancelled .timeline-label {
+            color: #ef4444;
+        }
+
+        /* Detail Cards */
+        .glass-detail-card {
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            margin-left: 50px;
+            margin-right: 50px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .status-container {
+                padding: 0 12px;
+                margin-top: 100px;
+            }
+            .glass-detail-card {
+                padding: 20px 15px;
+                margin-left: 0;
+                margin-right: 0;
+            }
+            .btn-whatsapp-status {
+                font-size: 0.95rem;
+                padding: 12px 15px;
+            }
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        .detail-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 12px;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--color-text-main);
+        }
+
+        .route-highlight {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        /* Alert Panel */
+        .status-alert {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            background: rgba(0, 245, 255, 0.03);
+            border: 1px solid rgba(0, 245, 255, 0.1);
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 25px;
+        }
+
+        .status-alert.confirmed {
+            background: rgba(34, 197, 94, 0.03);
+            border-color: rgba(34, 197, 94, 0.1);
+        }
+
+        .status-alert.cancelled {
+            background: rgba(239, 68, 68, 0.03);
+            border-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .status-alert i {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+        }
+
+        .status-alert.confirmed i {
+            color: #22c55e;
+        }
+
+        .status-alert.cancelled i {
+            color: #ef4444;
+        }
+
+        .status-alert-content h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--color-text-main);
+        }
+
+        .status-alert-content p {
+            font-size: 0.88rem;
+            color: var(--color-text-muted);
+            line-height: 1.4;
+        }
+
+        /* WhatsApp Button */
+        .btn-whatsapp-status {
+            background: #25d366;
+            color: #000;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+            text-decoration: none;
+            margin-top: 30px;
+        }
+
+        .btn-whatsapp-status:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 245, 255, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 245, 255, 0);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="map-visual"></div>
+
+        <div class="website-content">
+            <!-- Navbar -->
+            <nav class="navbar">
+                <a href="/" class="brand">Sikkim Taxi</a>
+                <div class="nav-right">
+                    <a href="tel:+919339727733" class="call-btn">
+                        <i class="ri-phone-fill"></i><span>+91 93397 27733</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="status-container">
+                <!-- Status Header -->
+                <div class="status-header-section">
+                    <div id="status-icon-container">
+                        <i class="ri-loader-4-line ri-spin status-header-icon" style="color: var(--color-primary);"></i>
+                    </div>
+                    <h1 id="status-page-title" class="status-title">Checking Booking...</h1>
+                    <div id="booking-ref-badge" class="status-ref" style="display: none;">REF: TS-XXXX</div>
+                </div>
+
+                <!-- Timeline Tracker -->
+                <div class="timeline-tracker">
+                    <div id="timeline-progress" class="timeline-progress-line" style="width: 0%;"></div>
+
+                    <div id="step-received" class="timeline-step">
+                        <div class="timeline-icon"><i class="ri-survey-line"></i></div>
+                        <div class="timeline-label">Logged</div>
+                    </div>
+
+                    <div id="step-review" class="timeline-step">
+                        <div class="timeline-icon"><i class="ri-loader-3-line"></i></div>
+                        <div class="timeline-label">In Review</div>
+                    </div>
+
+                    <div id="step-final" class="timeline-step">
+                        <div class="timeline-icon" id="final-icon-element"><i class="ri-check-double-line"></i></div>
+                        <div class="timeline-label" id="final-label-element">Confirmed</div>
+                    </div>
+                </div>
+
+                <!-- Detail Panel -->
+                <div class="app-widget-card glass-detail-card">
+                    <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 20px;">Trip Summary</h3>
+                    
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Passenger Name</div>
+                            <div class="detail-value" id="val-name">---</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Vehicle Selected</div>
+                            <div class="detail-value" id="val-vehicle">---</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Travel Date</div>
+                            <div class="detail-value" id="val-date">---</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Estimated Fare</div>
+                            <div class="detail-value" id="val-rate" style="color: var(--color-primary); font-weight: 700;">---</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-item" style="margin-top: 20px; border-bottom: none;">
+                        <div class="detail-label">Route Plan</div>
+                        <div class="detail-value route-highlight">
+                            <span id="val-pickup">---</span> <i class="ri-arrow-right-line" style="color: var(--color-primary); font-size: 0.95rem; margin: 0 6px;"></i> <span id="val-drop">---</span>
+                        </div>
+                    </div>
+
+                    <!-- Alert / Advice Box -->
+                    <div id="status-alert-box" class="status-alert">
+                        <i class="ri-information-line"></i>
+                        <div class="status-alert-content">
+                            <h4 id="alert-header">Fetching request details</h4>
+                            <p id="alert-message">Please wait while we connect to the database to fetch your booking status.</p>
+                        </div>
+                    </div>
+
+                    <!-- Contact Support WhatsApp Button inside the card -->
+                    <a id="status-whatsapp-link" href="#" class="btn-whatsapp-status" style="display: none;">
+                        <i class="ri-whatsapp-line"></i>
+                        <span>Confirm Booking on WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="site-footer" style="margin-top: 100px;">
+                <p style="opacity:0.5; font-size:0.9rem;">&copy; 2026 Sikkim Taxi Service. All rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Polling Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookingId = urlParams.get('id');
+
+            if (!bookingId) {
+                document.getElementById('status-page-title').textContent = 'Invalid Booking Link';
+                document.getElementById('status-alert-box').innerHTML = `
+                    <i class="ri-error-warning-line" style="color: #ef4444;"></i>
+                    <div class="status-alert-content">
+                        <h4 style="color: #ef4444;">Error</h4>
+                        <p>No booking reference ID found in the URL. Please verify your link and try again.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // UI Elements
+            const titleEl = document.getElementById('status-page-title');
+            const refBadge = document.getElementById('booking-ref-badge');
+            const iconContainer = document.getElementById('status-icon-container');
+            const progressLine = document.getElementById('timeline-progress');
+            
+            const stepReceived = document.getElementById('step-received');
+            const stepReview = document.getElementById('step-review');
+            const stepFinal = document.getElementById('step-final');
+            const finalIcon = document.getElementById('final-icon-element');
+            const finalLabel = document.getElementById('final-label-element');
+
+            const valName = document.getElementById('val-name');
+            const valVehicle = document.getElementById('val-vehicle');
+            const valDate = document.getElementById('val-date');
+            const valRate = document.getElementById('val-rate');
+            const valPickup = document.getElementById('val-pickup');
+            const valDrop = document.getElementById('val-drop');
+
+            const alertBox = document.getElementById('status-alert-box');
+            const alertHeader = document.getElementById('alert-header');
+            const alertMsg = document.getElementById('alert-message');
+
+            const whatsappLink = document.getElementById('status-whatsapp-link');
+
+            async function fetchStatus() {
+                try {
+                    const res = await fetch(`/api/bookings/${bookingId}`);
+                    if (!res.ok) {
+                        throw new Error('Booking not found');
+                    }
+                    const data = await res.json();
+
+                    // 1. Render Basic Details
+                    valName.textContent = data.name;
+                    valVehicle.textContent = data.vehicle_name;
+                    valDate.textContent = new Date(data.date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    valRate.textContent = `₹${data.rate}`;
+                    valPickup.textContent = data.pickup;
+                    valDrop.textContent = data.drop_location;
+
+                    refBadge.textContent = `REF: TS-${data.id}`;
+                    refBadge.style.display = 'inline-block';
+
+                    // Prefill WhatsApp link
+                    const waText = encodeURIComponent(`Hi! I would like to confirm my booking request reference TS-${data.id} for the ${data.vehicle_name} from ${data.pickup} to ${data.drop_location} on ${new Date(data.date).toLocaleDateString()}.`);
+                    whatsappLink.href = `https://wa.me/919339727733?text=${waText}`;
+                    whatsappLink.style.display = 'flex';
+
+                    // 2. Adjust Tracker Timeline States
+                    if (data.status === 'Pending') {
+                        // Received = Completed, Review = Active, Final = Inactive
+                        titleEl.textContent = 'Booking Review Pending';
+                        iconContainer.innerHTML = '<i class="ri-time-line status-header-icon" style="color: #fbbf24;"></i>';
+                        
+                        progressLine.style.width = '50%';
+                        stepReceived.className = 'timeline-step completed';
+                        stepReview.className = 'timeline-step active';
+                        stepFinal.className = 'timeline-step';
+                        
+                        finalIcon.innerHTML = '<i class="ri-check-double-line"></i>';
+                        finalLabel.textContent = 'Confirmed';
+
+                        // Alert setup
+                        alertBox.className = 'status-alert';
+                        alertHeader.textContent = 'Verification in Progress';
+                        alertMsg.textContent = 'Our operator is reviewing vehicle availability. You will receive a call or WhatsApp message within 5 minutes to verify details and assign a driver.';
+                    
+                    } else if (data.status === 'Confirmed') {
+                        // All = Completed
+                        titleEl.textContent = 'Ride Confirmed!';
+                        iconContainer.innerHTML = '<i class="ri-checkbox-circle-line status-header-icon" style="color: #22c55e;"></i>';
+                        
+                        progressLine.style.width = '100%';
+                        stepReceived.className = 'timeline-step completed';
+                        stepReview.className = 'timeline-step completed';
+                        stepFinal.className = 'timeline-step completed';
+
+                        finalIcon.innerHTML = '<i class="ri-checkbox-circle-fill"></i>';
+                        finalLabel.textContent = 'Confirmed';
+
+                        // Alert setup
+                        alertBox.className = 'status-alert confirmed';
+                        alertHeader.textContent = 'Booking Confirmed!';
+                        alertMsg.textContent = 'Your ride is officially confirmed. A driver has been assigned to your vehicle and will coordinate with you directly on the morning of your trip.';
+                        
+                    } else if (data.status === 'Cancelled') {
+                        // Cancelled state
+                        titleEl.textContent = 'Booking Cancelled';
+                        iconContainer.innerHTML = '<i class="ri-close-circle-line status-header-icon" style="color: #ef4444;"></i>';
+                        
+                        progressLine.style.width = '100%';
+                        stepReceived.className = 'timeline-step completed';
+                        stepReview.className = 'timeline-step completed';
+                        stepFinal.className = 'timeline-step cancelled';
+
+                        finalIcon.innerHTML = '<i class="ri-close-circle-fill"></i>';
+                        finalLabel.textContent = 'Cancelled';
+
+                        // Alert setup
+                        alertBox.className = 'status-alert cancelled';
+                        alertHeader.textContent = 'Booking Cancelled';
+                        alertMsg.textContent = 'This booking request was cancelled. If you believe this is a mistake, please reach out to our WhatsApp support immediately.';
+                    }
+
+                } catch (err) {
+                    console.error('Fetch error:', err);
+                    titleEl.textContent = 'Booking Not Found';
+                    alertBox.className = 'status-alert cancelled';
+                    alertHeader.textContent = 'Fetch Failed';
+                    alertMsg.textContent = 'We could not load your booking details. Please verify your reference link.';
+                }
+            }
+
+            // Run immediately on page load
+            fetchStatus();
+
+            // Poll every 10 seconds to auto-refresh
+            setInterval(fetchStatus, 10000);
+        });
+    </script>
+</body>
+
+</html>
