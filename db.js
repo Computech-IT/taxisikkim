@@ -23,7 +23,7 @@ async function initDb() {
         } catch (err) {
             console.error('❌ MySQL Connection Error:', err.message);
             console.error('Check your DB credentials in .env file');
-            process.exit(1);
+            // process.exit(1);
         }
         await createMySQLTables();
         await seedMySQLData();

@@ -109,6 +109,17 @@ const isAdmin = (req, res, next) => {
     }
 };
 
+app.get('/diagnose', (req, res) => {
+    res.json({
+        DB_USER: process.env.DB_USER || '(undefined)',
+        DB_NAME: process.env.DB_NAME || '(undefined)',
+        DB_HOST: process.env.DB_HOST || '(undefined)',
+        DB_PORT: process.env.DB_PORT || '(undefined)',
+        DB_PASSWORD_LENGTH: process.env.DB_PASSWORD ? process.env.DB_PASSWORD.length : 0,
+        NODE_ENV: process.env.NODE_ENV || '(undefined)'
+    });
+});
+
 // =====================
 // Public API Routes
 // =====================
