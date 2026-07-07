@@ -110,12 +110,16 @@ const isAdmin = (req, res, next) => {
 };
 
 app.get('/diagnose', async (req, res) => {
+    const pass = process.env.DB_PASSWORD || '';
+    const maskedPass = pass.length > 4 ? `${pass.substring(0, 2)}...${pass.substring(pass.length - 2)}` : '****';
+
     const results = {
         DB_USER: process.env.DB_USER || '(undefined)',
         DB_NAME: process.env.DB_NAME || '(undefined)',
         DB_HOST: process.env.DB_HOST || '(undefined)',
         DB_PORT: process.env.DB_PORT || '(undefined)',
-        DB_PASSWORD_LENGTH: process.env.DB_PASSWORD ? process.env.DB_PASSWORD.length : 0,
+        DB_PASSWORD_MASKED: maskedPass,
+        DB_PASSWORD_LENGTH: pass.length,
         NODE_ENV: process.env.NODE_ENV || '(undefined)',
         connectionTests: {}
     };
