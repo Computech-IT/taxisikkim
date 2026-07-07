@@ -126,15 +126,20 @@ app.get('/diagnose', async (req, res) => {
 
     const mysql = require('mysql2/promise');
     
-    async function test(label, host, databaseName) {
+    async function test(label, host, databaseName, socketPath = null) {
         try {
-            const conn = await mysql.createConnection({
-                host: host,
+            const config = {
                 user: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
-                database: databaseName,
-                port: parseInt(process.env.DB_PORT || 3306)
-            });
+                database: databaseName
+            };
+            if (socketPath) {
+                config.socketPath = socketPath;
+            } else {
+                config.host = host;
+                config.port = parseInt(process.env.DB_PORT || 3306);
+            }
+            const conn = await mysql.createConnection(config);
             await conn.end();
             results.connectionTests[label] = "✅ SUCCESS";
         } catch (err) {
@@ -146,6 +151,7 @@ app.get('/diagnose', async (req, res) => {
     const currentName = process.env.DB_NAME || '';
     const lowercaseName = currentName.toLowerCase();
 
+    // 1. TCP Tests
     await test(`Host: 127.0.0.1 | DB: ${currentName}`, '127.0.0.1', currentName);
     if (currentName !== lowercaseName) {
         await test(`Host: 127.0.0.1 | DB: ${lowercaseName} (lowercase)`, '127.0.0.1', lowercaseName);
@@ -155,6 +161,11 @@ app.get('/diagnose', async (req, res) => {
     if (currentName !== lowercaseName) {
         await test(`Host: localhost | DB: ${lowercaseName} (lowercase)`, 'localhost', lowercaseName);
     }
+
+    // 2. UNIX Socket Tests
+    await test(`Socket: /var/run/mysqld/mysqld.sock | DB: ${currentName}`, null, currentName, '/var/run/mysqld/mysqld.sock');
+    await test(`Socket: /tmp/mysql.sock | DB: ${currentName}`, null, currentName, '/tmp/mysql.sock');
+    await test(`Socket: /var/lib/mysql/mysql.sock | DB: ${currentName}`, null, currentName, '/var/lib/mysql/mysql.sock');
 
     res.json(results);
 });
