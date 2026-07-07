@@ -20,13 +20,14 @@ async function initDb() {
             const connection = await mysqlPool.getConnection();
             console.log('✅ MySQL Connected to database');
             connection.release();
+            
+            await createMySQLTables();
+            await seedMySQLData();
         } catch (err) {
             console.error('❌ MySQL Connection Error:', err.message);
             console.error('Check your DB credentials in .env file');
             // process.exit(1);
         }
-        await createMySQLTables();
-        await seedMySQLData();
     } else {
         const Database = require('better-sqlite3');
         const dbPath = path.join(__dirname, 'taxisikkim.db');
