@@ -1,4 +1,3 @@
-const Database = require('better-sqlite3');
 const mysql = require('mysql2/promise');
 const path = require('path');
 const bcrypt = require('bcrypt');
@@ -29,6 +28,7 @@ async function initDb() {
         await createMySQLTables();
         await seedMySQLData();
     } else {
+        const Database = require('better-sqlite3');
         const dbPath = path.join(__dirname, 'taxisikkim.db');
         sqliteDb = new Database(dbPath);
         createSQLiteTables();
